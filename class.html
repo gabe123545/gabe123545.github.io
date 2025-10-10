@@ -103,9 +103,10 @@ const assignedStudentIds = new Set();
     // Update local classes and studentsByClass
     classes.length = 0;
     classList.forEach(cls => {
-      // keep both `id` and `classId` for compatibility and clarity
-      classes.push({ className: cls.className, id: cls.id, classId: cls.id });
-      if (!studentsByClass[cls.id]) studentsByClass[cls.id] = [];
+      // backend returns `classId` — use that consistently
+      const id = cls.classId !== undefined ? cls.classId : cls.id;
+      classes.push({ className: cls.className, id: id, classId: id });
+      if (!studentsByClass[id]) studentsByClass[id] = [];
     });
     updateClassDropdown();
     await fetchAssignedStudents();
@@ -122,8 +123,8 @@ const assignedStudentIds = new Set();
         sClassSelect.innerHTML = "";
         classes.forEach(cls => {
           const option = document.createElement("option");
-          // store the numeric/string id in the option value and show the name to the user
-          option.value = cls.id;
+          // store the classId (from backend) in the option value and show the name to the user
+          option.value = cls.classId;
           option.textContent = cls.className;
           sClassSelect.appendChild(option);
         });
@@ -273,7 +274,7 @@ function renderClassrooms() {
         <th>Checked Out Tools</th>
       </tr>
     `;
-    (studentsByClass[cls.id] || []).forEach(student => {
+    (studentsByClass[cls.classId] || []).forEach(student => {
       const row = document.createElement("tr");
       row.innerHTML = `<td>${student.name}</td><td>${student.email}</td><td></td>`;
       table.appendChild(row);

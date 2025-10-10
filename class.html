@@ -103,7 +103,8 @@ const assignedStudentIds = new Set();
     // Update local classes and studentsByClass
     classes.length = 0;
     classList.forEach(cls => {
-      classes.push({ className: cls.className, id: cls.id });
+      // keep both `id` and `classId` for compatibility and clarity
+      classes.push({ className: cls.className, id: cls.id, classId: cls.id });
       if (!studentsByClass[cls.id]) studentsByClass[cls.id] = [];
     });
     updateClassDropdown();
@@ -121,7 +122,8 @@ const assignedStudentIds = new Set();
         sClassSelect.innerHTML = "";
         classes.forEach(cls => {
           const option = document.createElement("option");
-          option.value = cls.className;
+          // store the numeric/string id in the option value and show the name to the user
+          option.value = cls.id;
           option.textContent = cls.className;
           sClassSelect.appendChild(option);
         });
@@ -145,10 +147,11 @@ const assignedStudentIds = new Set();
 // Add student to class and persist to backend
 async function addStudentToClass(user, classId) {
   try {
+    // classId is passed as a primitive (string or number)
     const response = await fetch("https://develmets.skiscratcher.com/assignStudentToClass", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ studentId: user.userid, classId: classId.classId }),
+      body: new URLSearchParams({ studentId: user.userid, classId: classId }),
       credentials: "include"
     });
 
@@ -157,9 +160,9 @@ async function addStudentToClass(user, classId) {
       return;
     }
 
-    assignedStudentIds.add(user.id);
-    if (!studentsByClass[classId]) studentsByClass[classId] = [];
-    studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userid });
+  assignedStudentIds.add(user.id);
+  if (!studentsByClass[classId]) studentsByClass[classId] = [];
+  studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userid });
     renderClassrooms();
     renderUserList();
 
@@ -226,13 +229,15 @@ async function renderUserList() {
       addBtn.textContent = "+";
       addBtn.style.marginRight = "12px";
       addBtn.onclick = function () {
+        // the select now stores the class id in its value
         const sClass = document.getElementById("sClass").value;
-        const classObj = classes.find(cls => cls.className === sClass);
+        const classObj = classes.find(cls => String(cls.id) === String(sClass));
         if (!classObj) {
           alert("Please select a class first.");
           return;
         }
-        addStudentToClass(user, classObj.classId);
+        // pass the id directly
+        addStudentToClass(user, classObj.id);
       };
       row.appendChild(addBtn);
 

@@ -231,7 +231,7 @@ async function renderUserList() {
       addBtn.onclick = function () {
         // the select now stores the class id in its value
         const sClass = document.getElementById("sClass").value;
-        const classObj = classes.find(cls => String(cls.id) === String(sClass));
+        const classObj = classes.find(cls => String(cls.classId) === String(sClass));
         if (!classObj) {
           alert("Please select a class first.");
           return;

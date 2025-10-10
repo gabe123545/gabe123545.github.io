@@ -57,6 +57,7 @@
       // Store classes and students in memory
       const classes = [];
       const studentsByClass = {};
+  const tools = [];
       const StudentId = [];
 
       // Store students that have already been assigned to a class
@@ -110,6 +111,7 @@ const assignedStudentIds = new Set();
     });
     updateClassDropdown();
     await fetchAssignedStudents();
+  await fetchTools();
     renderClassrooms();
     renderUserList();
   } catch (err) {
@@ -169,6 +171,23 @@ async function addStudentToClass(user, classId) {
 
   } catch (err) {
     alert("Error assigning student: " + err);
+  }
+}
+
+// Fetch tools and cache them
+async function fetchTools() {
+  try {
+    const response = await fetch("https://develmets.skiscratcher.com/getTools", {
+      method: "GET",
+      credentials: "include"
+    });
+    if (!response.ok) return;
+    const fetched = await response.json();
+    // store the tools array
+    tools.length = 0;
+    fetched.forEach(t => tools.push(t));
+  } catch (err) {
+    // silently ignore for now
   }
 }
 
@@ -276,7 +295,10 @@ function renderClassrooms() {
     `;
     (studentsByClass[cls.classId] || []).forEach(student => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${student.name}</td><td>${student.email}</td><td></td>`;
+      // find tools checked out by this student: compare takenBy to the stored id fields
+      const taken = tools.filter(t => String(t.takenBy) === String(student.id) || String(t.takenBy) === String(student.userid));
+      const takenNames = taken.map(t => t.toolName).join(", ");
+      row.innerHTML = `<td>${student.name}</td><td>${student.email}</td><td>${takenNames}</td>`;
       table.appendChild(row);
     });
     classDiv.appendChild(table);

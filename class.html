@@ -197,7 +197,6 @@
                 // After the server confirms the assignment, re-fetch assigned users from the
                 // backend so the authoritative user object will include the new classId.
                 // fetchAssignedStudents() clears and repopulates local caches.
-                await fetchAssignedStudents();
 
                 // Re-render the UI from the refreshed, authoritative data
                 renderClassrooms();
@@ -254,8 +253,7 @@
         }
       }
   let classIdToName = {};
-// Fetch users and display them with add buttons (excluding already assigned students)
-// Fetch users and display them with add buttons (excluding already assigned students)
+  // Fetch users and display them with add buttons (excluding already assigned students)
   // Render the list of users (students) that can be added to a class.
   // Excludes users that are already assigned to a class (checked via assignedStudentIds).
   async function renderUserList() {

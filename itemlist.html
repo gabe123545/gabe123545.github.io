@@ -121,7 +121,7 @@ async function loadTools() {
           try {
             var toolTypeId = RemoveBtn.dataset.toolTypeId;
             console.log(toolTypeId);
-            const response = await fetch(`https://develmets.skiscratcher.com/removeToolType?id=${toolTypeId}`, {
+            const response = await fetch(`https://develmets.skiscratcher.com/removeTool?id=${toolTypeId}`, {
             method: "DELETE",
             credentials: "include"
           });

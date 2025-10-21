@@ -272,7 +272,7 @@
       // only student accounts
       if (user.userType != 1) return false;
       // if backend indicates a classId (non-null/undefined and numeric), exclude them
-      if (user.classId !== null && user.classId !== undefined && user.classId !== "") return false;
+      if (user.classId !== null || user.classId !== undefined || user.classId !== "") return false;
       // exclude if we've already recorded them as assigned
       if (assignedStudentIds.has(uid)) return false;
       return true;

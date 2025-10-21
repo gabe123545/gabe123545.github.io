@@ -265,18 +265,8 @@
 
     const users = await response.json();
 
-    // Filter out admins and students who are already assigned to a class.
-    // Compute a canonical uid for each user (backend may return `userid` or `id`).
-    const filtered = users.filter(user => {
-      const uid = user.userid !== undefined ? user.userid : user.id;
-      // only student accounts
-      if (user.userType != 1) return false;
-      // if backend indicates a classId (non-null/undefined and numeric), exclude them
-      if (user.classId !== null || user.classId !== undefined || user.classId !== "") return false;
-      // exclude if we've already recorded them as assigned
-      if (assignedStudentIds.has(uid)) return false;
-      return true;
-    });
+    // Filter out admins and already assigned students
+    const filtered = users.filter(user => user.userType == 1 && !assignedStudentIds.has(user.id) && (user.classId === null || user.classId === undefined));
 
     if (filtered.length === 0) {
       userListDiv.innerHTML = "<b>No students available to add.</b>";
@@ -307,11 +297,10 @@
       };
       row.appendChild(addBtn);
 
-  // Student info with class name
-  const info = document.createElement("span");
-  const uid = user.userid !== undefined ? user.userid : user.id;
-  const className = (user.classId !== undefined && user.classId !== null) ? (classIdToName[user.classId] || `Class ${user.classId}`) : "No class assigned";
-  info.textContent = `${user.displayName} (${user.email}) – Class: ${className}`;
+      // Student info with class name
+      const info = document.createElement("span");
+      const className = classIdToName[user.classId] || "No class assigned";
+      info.textContent = `${user.displayName} (${user.email}) – Class: ${className}`;
       row.appendChild(info);
 
       userListDiv.appendChild(row);

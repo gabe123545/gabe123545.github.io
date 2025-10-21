@@ -177,34 +177,31 @@
       //  - POSTs studentId and classId to /assignStudentToClass
       //  - On success updates local caches: assignedStudentIds and studentsByClass
       //  - Then re-renders classrooms and the user list
-            async function addStudentToClass(user, classId) {
-              try {
-                // Use whichever id field the user object has (backend may return `userid` or `id`)
-                const uid = user.userid !== undefined ? user.userid : user.id;
+      async function addStudentToClass(user, classId) {
+        try {
+          const response = await fetch("https://develmets.skiscratcher.com/assignStudentToClass", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ studentId: user.userid, classId: classId }),
+            credentials: "include"
+          });
 
-                const response = await fetch("https://develmets.skiscratcher.com/assignStudentToClass", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                  body: new URLSearchParams({ studentId: uid, classId: classId }),
-                  credentials: "include"
-                });
+          if (!response.ok) {
+            alert("Failed to assign student to class.");
+            return;
+          }
 
-                if (!response.ok) {
-                  alert("Failed to assign student to class.");
-                  return;
-                }
+          // locally mark the user as assigned and add to the class list
+          assignedStudentIds.add(user.userid);
+          if (!studentsByClass[classId]) studentsByClass[classId] = [];
+          studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userid });
 
-                // After the server confirms the assignment, re-fetch assigned users from the
-                // backend so the authoritative user object will include the new classId.
-                // fetchAssignedStudents() clears and repopulates local caches.
-
-                // Re-render the UI from the refreshed, authoritative data
-                renderClassrooms();
-                renderUserList();
-              } catch (err) {
-                alert("Error assigning student: " + err);
-              }
-            }
+          renderClassrooms();
+          renderUserList();
+        } catch (err) {
+          alert("Error assigning student: " + err);
+        }
+      }
 
       // Fetch tools and cache them in `tools` array.
       // Each tool is expected to contain fields such as: { toolName, takenBy, toolTypeId, ... }
@@ -238,22 +235,19 @@
           });
           if (!response.ok) return;
           const assigned = await response.json();
-          // Reset caches before repopulating to avoid duplicates
-          assignedStudentIds.clear();
-          Object.keys(studentsByClass).forEach(k => { studentsByClass[k] = []; });
           assigned.forEach(item => {
-            const uid = item.userid !== undefined ? item.userid : item.id;
-            assignedStudentIds.add(uid);
+            assignedStudentIds.add(item.userid);
             if (!studentsByClass[item.classId]) studentsByClass[item.classId] = [];
             // keep a minimal student shape for display
-            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: uid });
+            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: item.userid });
           });
         } catch (err) {
           // Ignore errors for now
         }
       }
   let classIdToName = {};
-  // Fetch users and display them with add buttons (excluding already assigned students)
+// Fetch users and display them with add buttons (excluding already assigned students)
+// Fetch users and display them with add buttons (excluding already assigned students)
   // Render the list of users (students) that can be added to a class.
   // Excludes users that are already assigned to a class (checked via assignedStudentIds).
   async function renderUserList() {

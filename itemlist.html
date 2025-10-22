@@ -12,7 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
-  <!--jimmy-->
 <body>
   <nav>
     <!--KTI Logo and Title-->
@@ -111,7 +110,7 @@ async function loadTools() {
         RemoveBtn.innerText = "Remove";
         RemoveBtn.classList.add("remove-btn");
         console.log(tool);
-        RemoveBtn.dataset.toolID = tool.toolID; //Jimmy
+        RemoveBtn.dataset.toolID = tool.toolID;
 
         RemoveBtn.onclick = async function (e) {
         e.stopPropagation();

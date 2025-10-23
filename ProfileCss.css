@@ -1,0 +1,85 @@
+/* ProfileCss.css - red & white theme for Profile.html */
+:root{
+  --brand-red: #b71c1c; /* deep Keefe Tech red */
+  --brand-red-strong: #8f1414;
+  --accent: #d32f2f;
+  --bg: #ffffff;
+  --muted: #f6f6f6;
+  --text: #222;
+}
+
+/* Reset basics */
+*{box-sizing:border-box}
+body{
+  font-family: 'Oswald', Arial, Helvetica, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--muted) 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Nav area reuse from other pages, make it compact */
+nav{
+  background:var(--brand-red);
+  color:white;
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+nav .navMainText{
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
+}
+nav img#navImage{border-radius:6px}
+
+.topnav{margin-left:auto}
+.topnav a{color:white;text-decoration:none;margin-left:12px;font-weight:600}
+
+/* Page title */
+.profileTitle{
+  text-align:center;
+  color:var(--brand-red-strong);
+  margin:28px 0 8px 0;
+  font-size:28px;
+}
+
+/* Profile container centered card */
+.profileContainer{
+  max-width:920px;
+  margin:18px auto;
+  background: white;
+  border-radius:10px;
+  padding:22px;
+  display:grid;
+  grid-template-columns: 1fr 260px;
+  gap:20px;
+  align-items:center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.profileDetails h2{
+  margin:10px 0;
+  font-weight:500;
+  color:var(--brand-red-strong);
+}
+.profileDetails h2 i{font-style:normal;color:var(--brand-red)}
+
+.profilePicture{display:flex;justify-content:center}
+.profilePicture img{border-radius:8px;border:6px solid var(--muted);width:140px;height:140px;object-fit:cover}
+
+/* Buttons, small utilities */
+.btn{display:inline-block;padding:10px 14px;border-radius:6px;border:0;background:var(--brand-red);color:white;cursor:pointer}
+.btn.secondary{background:#f3f3f3;color:var(--brand-red)}
+
+/* Responsive adjustments */
+@media (max-width:800px){
+  .profileContainer{grid-template-columns: 1fr; padding:16px}
+  .profilePicture{order:-1;margin-bottom:8px}
+}
+
+/* small footer spacing */
+footer{max-width:920px;margin:24px auto;text-align:center;color:#555}

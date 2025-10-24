@@ -103,6 +103,16 @@ nav img {
 .btn{display:inline-block;padding:10px 14px;border-radius:6px;border:0;background:var(--brand-red);color:white;cursor:pointer}
 .btn.secondary{background:#f3f3f3;color:var(--brand-red)}
 
+.historyRow{
+  width: auto;
+  height: 100px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid var(--muted);
+}
+
 #historyContainer{
   max-width:920px;
   margin:18px auto;

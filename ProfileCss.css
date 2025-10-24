@@ -104,13 +104,14 @@ nav img {
 .btn.secondary{background:#f3f3f3;color:var(--brand-red)}
 
 .historyRow{
-  width: auto;
-  height: 100px;
+  width: 100%;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px 0;
+  flex-direction:column; /* stack item fields vertically */
+  align-items:flex-start;
+  gap:6px;
+  padding:12px 10px;
   border-bottom:1px solid var(--muted);
+  background: transparent;
 }
 
 #historyContainer{
@@ -118,11 +119,8 @@ nav img {
   margin:18px auto;
   background: white;
   border-radius:10px;
-  padding:22px;
-  display:grid;
-  grid-template-columns: 1fr 260px;
-  gap:20px;
-  align-items:center;
+  padding:12px 18px;
+  display:block;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 

@@ -46,55 +46,56 @@
         </div>
     </div>
     <script>
+        // Fetch the current user's history from the backend and render it into
+        // #historyContainer. This runs on page load.
         async function GetHistory(){
-            const History = document.getElementById("historyContainer");
+            const container = document.getElementById("historyContainer");
+            container.innerHTML = "<p><i>Loading history...</i></p>";
             try {
-            const response = await fetch("https://develmets.skiscratcher.com/getMyHistory", {
-                method: "GET",
-                credentials: "include"
-            });
-            if (!response.ok) 
-            History.innerHTML = "<h3><i>No History Found</i></h3>";
-            return;
-            const assigned = await response.json();
-            console.log(assigned);
-            
+                const response = await fetch("https://develmets.skiscratcher.com/getMyHistory", {
+                    method: "GET",
+                    credentials: "include"
+                });
 
-            assigned.forEach(historyItem => {
-            const row = document.createElement("div");
-            row.className = "historyRow";
-            row.style.display = "flex";
-            row.style.alignItems = "center";
-            row.style.marginBottom = "8px";
+                if (!response.ok) {
+                    container.innerHTML = "<h3><i>No History Found</i></h3>";
+                    return;
+                }
 
-            row.innerHTML = `
-                <div style="flex: 1;"><i>Item Name:</i> ${historyItem.toolId}</div>
-                <div style="flex: 1;"><i>Time Taken:</i> ${historyItem.timeTaken}</div>
-                <div style="flex: 1;"><i>Time Returned:</i> ${new Date(historyItem.timeReturned).toLocaleString()}</div>
-            `;
-            History.appendChild(row);
-            });
+                const history = await response.json();
+                if (!Array.isArray(history) || history.length === 0) {
+                    container.innerHTML = "<h3><i>No History Found</i></h3>";
+                    return;
+                }
+
+                // Clear and populate
+                container.innerHTML = "";
+                history.forEach(historyItem => {
+                    const row = document.createElement("div");
+                    row.className = "historyRow";
+                    row.style.display = "flex";
+                    row.style.alignItems = "center";
+                    row.style.marginBottom = "8px";
+
+                    // timeTaken / timeReturned may be timestamps or ISO strings.
+                    const taken = historyItem.timeTaken ? new Date(historyItem.timeTaken).toLocaleString() : "-";
+                    const returned = historyItem.timeReturned ? new Date(historyItem.timeReturned).toLocaleString() : "-";
+
+                    row.innerHTML = `
+                        <div style="flex: 1;"><i>Item ID:</i> ${historyItem.toolId}</div>
+                        <div style="flex: 1;"><i>Time Taken:</i> ${taken}</div>
+                        <div style="flex: 1;"><i>Time Returned:</i> ${returned}</div>`;
+                    container.appendChild(row);
+                });
+
             } catch (err) {
-            // Ignore errors for now
-            }
-
-            async function fetchTools() {
-            try {
-            const response = await fetch("https://develmets.skiscratcher.com/getTools", {
-                method: "GET",
-                credentials: "include"
-            });
-            if (!response.ok) return;
-            const fetched = await response.json();
-            // store the tools array (replace contents)
-            tools.length = 0;
-            fetched.forEach(t => tools.push(t));
-            } catch (err) {
-            // silently ignore network errors for now — UI will simply show no tools
+                console.error('Failed to load history', err);
+                container.innerHTML = "<h3><i>Error loading history</i></h3>";
             }
         }
 
-        }
+        // Also ensure history is loaded on DOMContentLoaded in case onload was not fired
+        window.addEventListener('DOMContentLoaded', GetHistory);
     </script>
 </body>
 </html>

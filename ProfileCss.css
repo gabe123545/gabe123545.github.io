@@ -104,12 +104,16 @@ nav img {
 .btn.secondary{background:#f3f3f3;color:var(--brand-red)}
 
 #historyContainer{
-  max-height:300px;
-  overflow-y:auto;
-  border:1px solid var(--muted);
-  border-radius:6px;
-  padding:8px;
-  background:#fafafa;
+  max-width:920px;
+  margin:18px auto;
+  background: white;
+  border-radius:10px;
+  padding:22px;
+  display:grid;
+  grid-template-columns: 1fr 260px;
+  gap:20px;
+  align-items:center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 

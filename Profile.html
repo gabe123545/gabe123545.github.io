@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body onload="GetHistory()">
     <nav>
     <!--KTI Logo and Title-->
     <p class="navMainText">
@@ -39,5 +39,62 @@
             <img src="Images/metalIcon.jpg" width="150" alt="placeholder">
         </div>
     </div>
+    <div class="historySection">
+        <h2><i>History</i></h2>
+        <div class="historyContainer" id="historyContainer">
+            <!-- History items will be appended here -->
+        </div>
+    </div>
+    <script>
+        async function GetHistory(){
+            const History = document.getElementById("historyContainer");
+            try {
+            const response = await fetch("https://develmets.skiscratcher.com/getMyHistory", {
+                method: "GET",
+                credentials: "include"
+            });
+            if (!response.ok) 
+            History.innerHTML = "<h3><i>No History Found</i></h3>";
+            return;
+            const assigned = await response.json();
+            console.log(assigned);
+            
+
+            assigned.forEach(historyItem => {
+            const row = document.createElement("div");
+            row.className = "historyRow";
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.marginBottom = "8px";
+
+            row.innerHTML = `
+                <div style="flex: 1;"><i>Item Name:</i> ${historyItem.toolId}</div>
+                <div style="flex: 1;"><i>Time Taken:</i> ${historyItem.timeTaken}</div>
+                <div style="flex: 1;"><i>Time Returned:</i> ${new Date(historyItem.timeReturned).toLocaleString()}</div>
+            `;
+            History.appendChild(row);
+            });
+            } catch (err) {
+            // Ignore errors for now
+            }
+
+            async function fetchTools() {
+            try {
+            const response = await fetch("https://develmets.skiscratcher.com/getTools", {
+                method: "GET",
+                credentials: "include"
+            });
+            if (!response.ok) return;
+            const fetched = await response.json();
+            // store the tools array (replace contents)
+            tools.length = 0;
+            fetched.forEach(t => tools.push(t));
+            } catch (err) {
+            // silently ignore network errors for now — UI will simply show no tools
+            }
+        }
+
+        }
+    </script>
 </body>
 </html>

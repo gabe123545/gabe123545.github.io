@@ -103,6 +103,16 @@ nav img {
 .btn{display:inline-block;padding:10px 14px;border-radius:6px;border:0;background:var(--brand-red);color:white;cursor:pointer}
 .btn.secondary{background:#f3f3f3;color:var(--brand-red)}
 
+#historyContainer{
+  max-height:300px;
+  overflow-y:auto;
+  border:1px solid var(--muted);
+  border-radius:6px;
+  padding:8px;
+  background:#fafafa;
+}
+
+
 /* Responsive adjustments */
 @media (max-width:800px){
   .profileContainer{grid-template-columns: 1fr; padding:16px}

@@ -94,12 +94,11 @@ async function loadTools() {
       container.innerHTML = ""; // Clear existing items
 
       tools.forEach(tool => {
-      if(tools.takenBy != null){
         const cardBtn = document.createElement("button");
         const cardBorder = document.createElement("div");
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
-
+      if(tools.takenBy != null){
         cardBorder.classList.add("border");
         cardBtn.classList.add("grid-item");
 
@@ -113,15 +112,11 @@ async function loadTools() {
         RemoveBtn.dataset.toolId = tool.toolId;
        }
        else{
-        const cardBtn = document.createElement("button");
-        const cardBorder = document.createElement("div");
-        const innerCardText = document.createElement("p");
-        const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
 
         takenLabel.innerText = "Taken";
         takenLabel.classList.add("taken-label");
-        
+
         cardBorder.classList.add("border");
         cardBtn.classList.add("grid-item");
 

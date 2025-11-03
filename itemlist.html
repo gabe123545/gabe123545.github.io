@@ -94,6 +94,7 @@ async function loadTools() {
       container.innerHTML = ""; // Clear existing items
 
       tools.forEach(tool => {
+      if(tools.takenBy != null){
         const cardBtn = document.createElement("button");
         const cardBorder = document.createElement("div");
         const innerCardText = document.createElement("p");
@@ -110,7 +111,29 @@ async function loadTools() {
         RemoveBtn.classList.add("remove-btn");
         console.log(tool);
         RemoveBtn.dataset.toolId = tool.toolId;
+       }
+       else{
+        const cardBtn = document.createElement("button");
+        const cardBorder = document.createElement("div");
+        const innerCardText = document.createElement("p");
+        const RemoveBtn = document.createElement("button");
+        const takenLabel = document.createElement("span");
 
+        takenLabel.innerText = "Taken";
+        takenLabel.classList.add("taken-label");
+        
+        cardBorder.classList.add("border");
+        cardBtn.classList.add("grid-item");
+
+        innerCardText.innerText = `${tool.toolName}`;
+        cardBorder.appendChild(innerCardText);
+
+        // Add Remove button inside the border
+        RemoveBtn.innerText = "Remove";
+        RemoveBtn.classList.add("remove-btn");
+        console.log(tool);
+        RemoveBtn.dataset.toolId = tool.toolId;
+       }
         RemoveBtn.onclick = async function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -144,6 +167,7 @@ async function loadTools() {
 
         cardBtn.appendChild(cardBorder);
         container.appendChild(cardBtn);
+        cardBtn.appendChild(takenLabel); // <-- Place inside button
         cardBorder.appendChild(RemoveBtn); // <-- Place inside border
       });
 

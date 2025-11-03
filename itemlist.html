@@ -98,7 +98,11 @@ async function loadTools() {
         const cardBorder = document.createElement("div");
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
+        const takenLabel = document.createElement("span");
       if(tools.takenBy != null){
+        takenLabel.innerText = "Available";
+        takenLabel.classList.add("taken-label");
+
         cardBorder.classList.add("border");
         cardBtn.classList.add("grid-item");
 
@@ -112,7 +116,7 @@ async function loadTools() {
         RemoveBtn.dataset.toolId = tool.toolId;
        }
        else{
-        const takenLabel = document.createElement("span");
+        
 
         takenLabel.innerText = "Taken";
         takenLabel.classList.add("taken-label");

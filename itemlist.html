@@ -135,7 +135,10 @@ async function loadTools() {
         RemoveBtn.onclick = async function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        if(tool.takenBy != null){
+          alert("Cannot remove a taken tool.");
+          return;
+        }
         if (confirm(`Are you sure you want to remove ${tool.toolName}?`)) {
           try {
             var toolId = RemoveBtn.dataset.toolId;

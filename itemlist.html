@@ -99,7 +99,7 @@ async function loadTools() {
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
-      if(tools.takenBy != null){
+      if(tools.takenBy == null){
         takenLabel.innerText = "Available";
         takenLabel.classList.add("taken-label");
 

@@ -89,7 +89,6 @@ async function loadTools() {
       }
 
       const tools = await response.json();
-      var taken = tools.takenBy;
       const container = document.querySelector(".grid-container");
       container.innerHTML = ""; // Clear existing items
 
@@ -99,7 +98,7 @@ async function loadTools() {
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
-      if(taken == null){
+      if(tool.takenBy == null){
         takenLabel.innerText = "Available";
         takenLabel.classList.add("taken-label");
 

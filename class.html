@@ -178,10 +178,14 @@
       //  - Then re-renders classrooms and the user list
       async function addStudentToClass(user, classId) {
         try {
+          // canonical user id (backend may use userid or id)
+          const uid = user.userid !== undefined ? user.userid : user.id;
+
           const response = await fetch("https://develmets.skiscratcher.com/assignStudentToClass", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ classId: classId, id: user.userid }),
+            // backend expects studentId and classId
+            body: new URLSearchParams({ studentId: uid, classId: classId }),
             credentials: "include"
           });
           if (!response.ok) {
@@ -189,10 +193,10 @@
             return;
           }
 
-          // locally mark the user as assigned and add to the class list
-          assignedStudentIds.add(user.userid);
-          if (!studentsByClass[classId]) studentsByClass[classId] = [];
-          studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userid });
+          // Re-fetch authoritative assigned users so the new classId is reflected
+          await fetchAssignedStudents();
+          // Refresh tools as well in case any tool ownership changed
+          await fetchTools();
 
           renderClassrooms();
           renderUserList();
@@ -248,11 +252,17 @@
           });
           if (!response.ok) return;
           const assigned = await response.json();
+
+          // Clear previous caches to avoid duplicates
+          assignedStudentIds.clear();
+          Object.keys(studentsByClass).forEach(k => { studentsByClass[k] = []; });
+
           assigned.forEach(item => {
-            assignedStudentIds.add(item.userid);
+            const uid = item.userid !== undefined ? item.userid : item.id;
+            assignedStudentIds.add(uid);
             if (!studentsByClass[item.classId]) studentsByClass[item.classId] = [];
             // keep a minimal student shape for display
-            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: item.userid });
+            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: uid });
           });
         } catch (err) {
           // Ignore errors for now
@@ -347,9 +357,12 @@
           // Iterate the students assigned to this classId and produce one row each
           (studentsByClass[cls.classId] || []).forEach(student => {
             const row = document.createElement("tr");
-            // find tools checked out by this student: compare takenBy to the stored id fields
-            const taken = tools.filter(t => String(t.takenBy) === String(student.id) || String(t.takenBy) === String(student.userid));
-            const takenNames = taken.map(t => t.toolName).join(", ");
+            // canonical uid for the student
+            const uid = student.id !== undefined ? String(student.id) : String(student.userid || "");
+            // find tools checked out by this student: takenBy is a string of numbers
+            const taken = tools.filter(t => String(t.takenBy) === uid);
+            // Show toolName (toolId) for each taken tool
+            const takenNames = taken.map(t => `${t.toolName} (${t.toolId})`).join(", ");
             row.innerHTML = `<td>${student.name}</td><td>${student.email}</td><td>${takenNames}</td>`;
             table.appendChild(row);
           });

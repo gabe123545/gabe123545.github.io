@@ -211,11 +211,26 @@
             credentials: "include"
           });
           if (!response.ok) return;
+
           const fetched = await response.json();
-          // store the tools array (replace contents)
+
+          // Clear and replace the tools array
           tools.length = 0;
-          fetched.forEach(t => tools.push(t));
+
+          fetched.forEach(t => {
+            // Normalize data so we always have toolId, toolName, and takenBy
+            const tool = {
+              toolId: t.toolId ?? t.id ?? null,
+              toolName: t.toolName ?? t.name ?? "Unnamed Tool",
+              takenBy: t.takenBy ?? null
+            };
+            tools.push(tool);
+          });
+
+          // After updating tools, you can refresh the UI
+          renderClassrooms();
         } catch (err) {
+          console.error("Error fetching tools:", err);
           // silently ignore network errors for now — UI will simply show no tools
         }
       }

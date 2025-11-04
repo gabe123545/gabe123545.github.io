@@ -128,7 +128,7 @@
     });
     updateClassDropdown();
     await fetchAssignedStudents();
-  await fetchTools();
+    await fetchTools();
     renderClassrooms();
     renderUserList();
   } catch (err) {
@@ -333,7 +333,7 @@
           (studentsByClass[cls.classId] || []).forEach(student => {
             const row = document.createElement("tr");
             // find tools checked out by this student: compare takenBy to the stored id fields
-            const taken = tools.filter(t => String(t.takenBy) === String(student.id) || String(t.takenBy) === String(student.userid));
+            const taken = tools.filter(t => String(t.takenBy) === String(student.id) || String(t.takenBy) === String(student.userId));
             const takenNames = taken.map(t => t.toolName).join(", ");
             row.innerHTML = `<td>${student.name}</td><td>${student.email}</td><td>${takenNames}</td>`;
             table.appendChild(row);

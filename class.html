@@ -237,7 +237,7 @@
             assignedStudentIds.add(item.userid);
             if (!studentsByClass[item.classId]) studentsByClass[item.classId] = [];
             // keep a minimal student shape for display
-            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: item.userid });
+            studentsByClass[item.classId].push({ name: item.displayName, email: item.email, id: item.userId });
           });
         } catch (err) {
           // Ignore errors for now

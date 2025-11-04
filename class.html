@@ -181,7 +181,7 @@
           const response = await fetch("https://develmets.skiscratcher.com/assignStudentToClass", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ classId: classId, id: user.userid }),
+            body: new URLSearchParams({ classId: classId, id: user.userId }),
             credentials: "include"
           });
           if (!response.ok) {
@@ -192,7 +192,7 @@
           // locally mark the user as assigned and add to the class list
           assignedStudentIds.add(user.userid);
           if (!studentsByClass[classId]) studentsByClass[classId] = [];
-          studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userid });
+          studentsByClass[classId].push({ name: user.displayName, email: user.email, id: user.userId });
 
           renderClassrooms();
           renderUserList();

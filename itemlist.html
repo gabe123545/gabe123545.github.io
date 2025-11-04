@@ -98,6 +98,8 @@ async function loadTools() {
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
+        const forceReturnBtn = document.createElement("button");
+
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
         takenLabel.classList.add("taken-label");
@@ -115,10 +117,13 @@ async function loadTools() {
         RemoveBtn.dataset.toolId = tool.toolId;
        }
        else{
-        
-
         takenLabel.innerText = "Taken";
         takenLabel.classList.add("taken-label");
+
+        forceReturnBtn.innerText = "Force Return";
+        forceReturnBtn.classList.add("force-return-btn");
+        forceReturnBtn.dataset.toolId = tool.toolId;
+
 
         cardBorder.classList.add("border");
         cardBtn.classList.add("grid-item");
@@ -132,6 +137,38 @@ async function loadTools() {
         console.log(tool);
         RemoveBtn.dataset.toolId = tool.toolId;
        }
+       
+       forceReturnBtn.onclick = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (confirm(`Are you sure you want to force return ${tool.toolName}?`
+        )) {
+          try {
+            var toolId = forceReturnBtn.dataset.toolId;
+            console.log(toolId);
+            const response = await fetch(`https://develmets.skiscratcher.com/getTool?id=${toolId}`, {
+            method: "GET",
+            credentials: "include"
+          });
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success) {
+                result.tool.takenBy = null;
+                // Now update the tool
+                await loadTools(); // refresh the list
+              } else {
+                alert("Failed to force return tool: " + result.msg);
+              }
+            } else {
+              const text = await response.text();
+              alert("Failed to force return tool: " + text);
+            }
+          } catch (err) {
+            alert("Error forcing return of tool: " + err);
+          }
+        }
+
+
         RemoveBtn.onclick = async function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -163,12 +200,14 @@ async function loadTools() {
             alert("Error removing tool: " + err);
           }
         }
-      };
+      }
+    };
 
 
         cardBtn.appendChild(cardBorder);
         container.appendChild(cardBtn);
-        cardBtn.appendChild(takenLabel); // <-- Place inside button
+        cardBtn.appendChild(takenLabel);
+        cardBtn.appendChild(forceReturnBtn); // <-- Place inside button
         cardBorder.appendChild(RemoveBtn); // <-- Place inside border
       });
 

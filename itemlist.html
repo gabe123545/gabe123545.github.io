@@ -167,7 +167,7 @@ async function loadTools() {
             alert("Error forcing return of tool: " + err);
           }
         }
-
+      }
 
         RemoveBtn.onclick = async function (e) {
         e.stopPropagation();
@@ -201,9 +201,6 @@ async function loadTools() {
           }
         }
       }
-    };
-
-
         cardBtn.appendChild(cardBorder);
         container.appendChild(cardBtn);
         cardBtn.appendChild(takenLabel);

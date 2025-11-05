@@ -146,7 +146,7 @@ async function loadTools() {
           try {
             var toolId = forceReturnBtn.dataset.toolId;
             console.log(toolId);
-            const response = await fetch(`https://develmets.skiscratcher.com/getTool`, {
+            const response = await fetch(`https://develmets.skiscratcher.com/getTool?id=${toolId}`, {
             method: "GET",
             credentials: "include"
           });

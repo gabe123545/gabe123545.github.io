@@ -98,6 +98,7 @@ async function loadTools() {
         const innerCardText = document.createElement("p");
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
+        const forceReturnBtn = document.createElement("button");
 
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
@@ -116,7 +117,6 @@ async function loadTools() {
         RemoveBtn.dataset.toolId = tool.toolId;
        }
        else{
-        const forceReturnBtn = document.createElement("button");
         takenLabel.innerText = "Taken";
         takenLabel.classList.add("taken-label");
 

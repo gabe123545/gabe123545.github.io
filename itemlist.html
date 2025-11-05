@@ -152,7 +152,7 @@ async function loadTools() {
 
           // Try calling the GET endpoint with a return flag. Adjust the flag
           // if your server expects a different parameter (for example `action=return`).
-          const resp = await fetch(`https://develmets.skiscratcher.com/getTool?id=${toolId}&return=true`, {
+          const resp = await fetch(`https://develmets.skiscratcher.com/getTool?id=${toolId}`, {
             method: 'GET',
             credentials: 'include'
           });

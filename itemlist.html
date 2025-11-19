@@ -149,7 +149,7 @@ async function loadTools() {
               const response = await fetch(
                   `https://develmets.skiscratcher.com/returnTool?id=${toolId}`,
                   {
-                      method: "GET",   // or POST if your backend expects POST
+                      method: "POST",   // or POST if your backend expects POST
                       credentials: "include"
                   }
               );

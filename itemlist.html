@@ -99,6 +99,11 @@ async function loadTools() {
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
+        const createBarCode = document.createElement("button");
+
+        createBarCode.innerText = "Create Barcode";
+        createBarCode.classList.add("create-barcode-btn");
+        createBarCode.dataset.toolId = tool.toolId;
 
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
@@ -208,6 +213,7 @@ async function loadTools() {
         container.appendChild(cardBtn);
         cardBtn.appendChild(takenLabel);
         cardBtn.appendChild(forceReturnBtn); // <-- Place inside button
+        cardBtn.appendChild(createBarCode); // <-- Place inside button
         cardBorder.appendChild(RemoveBtn); // <-- Place inside border
       });
 

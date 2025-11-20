@@ -111,9 +111,11 @@ async function loadTools() {
         createBarCode.classList.add("create-barcode-btn");
         createBarCode.dataset.toolId = tool.toolId;
 
+        // When clicked, open a modal that shows the tool id/name and two actions
         createBarCode.onclick = function(e) {
           e.stopPropagation();
           e.preventDefault();
+          showToolModal(tool);
         };
 
       if(tool.takenBy == null){
@@ -354,6 +356,99 @@ async function loadTools() {
     }
 } 
 </script>
+
+    <!-- Modal helper: creates a simple overlay with tool info and two buttons -->
+    <script>
+    function showToolModal(tool) {
+      // remove existing modal if any
+      const existing = document.getElementById('tool-modal-overlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.id = 'tool-modal-overlay';
+      Object.assign(overlay.style, {
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999
+      });
+
+      const box = document.createElement('div');
+      Object.assign(box.style, {
+        background: '#fff', padding: '20px', borderRadius: '8px', width: '320px', boxShadow: '0 8px 30px rgba(0,0,0,0.2)'
+      });
+
+      const title = document.createElement('h3');
+      title.innerText = 'Tool Actions';
+      title.style.marginTop = '0';
+
+      const info = document.createElement('div');
+      info.style.margin = '10px 0';
+      info.innerHTML = `<strong>ID:</strong> ${tool.toolId || tool.id || ''}<br><strong>Name:</strong> ${tool.toolName || tool.name || ''}`;
+
+      const btnRow = document.createElement('div');
+      btnRow.style.display = 'flex';
+      btnRow.style.justifyContent = 'space-between';
+      btnRow.style.gap = '8px';
+
+      const returnBtn = document.createElement('button');
+      returnBtn.innerText = 'Return';
+      Object.assign(returnBtn.style, { flex: '1', padding: '8px', background: '#b71c1c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+      const takeoutBtn = document.createElement('button');
+      takeoutBtn.innerText = 'Takeout';
+      Object.assign(takeoutBtn.style, { flex: '1', padding: '8px', background: '#1976d2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+      const closeBtn = document.createElement('button');
+      closeBtn.innerText = 'Close';
+      Object.assign(closeBtn.style, { marginTop: '12px', padding: '8px', width: '100%', background: '#eee', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+      btnRow.appendChild(returnBtn);
+      btnRow.appendChild(takeoutBtn);
+      box.appendChild(title);
+      box.appendChild(info);
+      box.appendChild(btnRow);
+      box.appendChild(closeBtn);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+
+      // Handlers
+      closeBtn.onclick = () => overlay.remove();
+
+      returnBtn.onclick = async () => {
+        try {
+          const id = tool.toolId || tool.id;
+          // call server to return tool - adjust endpoint if needed
+          const resp = await fetch(`https://develmets.skiscratcher.com/returnTool?id=${id}`, { method: 'POST', credentials: 'include' });
+          if (!resp.ok) {
+            const txt = await resp.text();
+            alert('Return failed: ' + txt);
+            return;
+          }
+          // success - reload tools and close
+          await loadTools();
+          overlay.remove();
+        } catch (err) {
+          alert('Return error: ' + err);
+        }
+      };
+
+      takeoutBtn.onclick = async () => {
+        try {
+          const id = tool.toolId || tool.id;
+          // Attempt to call a takeout endpoint - if your backend differs, replace this URL
+          const resp = await fetch(`https://develmets.skiscratcher.com/takeTool?id=${id}`, { method: 'POST', credentials: 'include' });
+          if (!resp.ok) {
+            const txt = await resp.text();
+            alert('Takeout failed: ' + txt);
+            return;
+          }
+          await loadTools();
+          overlay.remove();
+        } catch (err) {
+          alert('Takeout error: ' + err);
+        }
+      };
+    }
+    </script>
 
 </body>
 

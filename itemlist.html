@@ -100,10 +100,21 @@ async function loadTools() {
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
         const createBarCode = document.createElement("button");
+        const createArea = document.createElement("div");
+
+        createArea.style.display = "none"; // Hidden area for barcode
+        createArea.style.border = "1px solid black";
+        createArea.style.marginTop = "10px";
+        createArea.style.padding = "10px";
 
         createBarCode.innerText = "Create Barcode";
         createBarCode.classList.add("create-barcode-btn");
         createBarCode.dataset.toolId = tool.toolId;
+
+        createBarCode.onclick = function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+        };
 
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";

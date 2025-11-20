@@ -417,7 +417,7 @@ async function loadTools() {
       try {
         const id = tool.toolId || tool.id;
 
-        const res = await fetch('/printBarcode', {
+        const res = await fetch('develmets.skiscratcher.com/printBarcode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, action: 'return' })
@@ -442,7 +442,7 @@ async function loadTools() {
       try {
         const id = tool.toolId || tool.id;
 
-        const res = await fetch('/printBarcode', {
+        const res = await fetch('develmets.skiscratcher.com/printBarcode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, action: 'takeout' })

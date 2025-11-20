@@ -420,53 +420,47 @@ async function loadTools() {
         const res = await fetch('/printBarcode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: id,
-            action: 'return'
-          })
+          body: JSON.stringify({ id, action: 'return' })
         });
 
         const data = await res.json();
 
-        if (!data.success) {
-          throw new Error(data.error || 'Unknown printing error');
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Return failed');
         }
 
-        alert('Return barcode printed successfully!');
-        console.log('Printer output:', data.printerOutput);
-
+        alert('Return barcode printed!');
+        
       } catch (err) {
         alert('Return error: ' + err.message);
       }
     };
 
 
-      takeoutBtn.onclick = async () => {
-        try {
-          const id = tool.toolId || tool.id;
 
-          const res = await fetch('/printBarcode', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: id,
-              action: 'takeout'
-            })
-          });
+    takeoutBtn.onclick = async () => {
+      try {
+        const id = tool.toolId || tool.id;
 
-          const data = await res.json();
+        const res = await fetch('/printBarcode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, action: 'takeout' })
+        });
 
-          if (!data.success) {
-            throw new Error(data.error || 'Unknown printing error');
-          }
+        const data = await res.json();
 
-          alert('Takeout barcode printed successfully!');
-          console.log('Printer output:', data.printerOutput);
-
-        } catch (err) {
-          alert('Takeout error: ' + err.message);
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Takeout failed');
         }
-      };
+
+        alert('Takeout barcode printed!');
+
+      } catch (err) {
+        alert('Takeout error: ' + err.message);
+      }
+    };
+
 
     }
     </script>

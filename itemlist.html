@@ -414,39 +414,60 @@ async function loadTools() {
       closeBtn.onclick = () => overlay.remove();
 
       returnBtn.onclick = async () => {
-        try {
-          const id = tool.toolId || tool.id;
-          // call server to return tool - adjust endpoint if needed
-          const resp = await fetch(`https://develmets.skiscratcher.com/returnTool?id=${id}`, { method: 'POST', credentials: 'include' });
-          if (!resp.ok) {
-            const txt = await resp.text();
-            alert('Return failed: ' + txt);
-            return;
-          }
-          // success - reload tools and close
-          await loadTools();
-          overlay.remove();
-        } catch (err) {
-          alert('Return error: ' + err);
+      try {
+        const id = tool.toolId || tool.id;
+
+        const res = await fetch('/printBarcode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: id,
+            action: 'return'
+          })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Unknown printing error');
         }
-      };
+
+        alert('Return barcode printed successfully!');
+        console.log('Printer output:', data.printerOutput);
+
+      } catch (err) {
+        alert('Return error: ' + err.message);
+      }
+    };
+
 
       takeoutBtn.onclick = async () => {
         try {
           const id = tool.toolId || tool.id;
-          // Attempt to call a takeout endpoint - if your backend differs, replace this URL
-          const resp = await fetch(`https://develmets.skiscratcher.com/takeTool?id=${id}`, { method: 'POST', credentials: 'include' });
-          if (!resp.ok) {
-            const txt = await resp.text();
-            alert('Takeout failed: ' + txt);
-            return;
+
+          const res = await fetch('/printBarcode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: id,
+              action: 'takeout'
+            })
+          });
+
+          const data = await res.json();
+
+          if (!data.success) {
+            throw new Error(data.error || 'Unknown printing error');
           }
-          await loadTools();
-          overlay.remove();
+
+          alert('Takeout barcode printed successfully!');
+          console.log('Printer output:', data.printerOutput);
+
         } catch (err) {
-          alert('Takeout error: ' + err);
+          alert('Takeout error: ' + err.message);
         }
       };
+
     }
     </script>
 

@@ -413,6 +413,9 @@ async function loadTools() {
       // Handlers
       closeBtn.onclick = () => overlay.remove();
 
+      
+
+
       returnBtn.onclick = async () => {
       try {
         const id = tool.toolId || tool.id;
@@ -435,6 +438,7 @@ async function loadTools() {
         alert('Return error: ' + err.message);
       }
     };
+
 
 
 

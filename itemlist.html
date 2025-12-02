@@ -359,8 +359,22 @@ async function loadTools() {
 
     <!-- Modal helper: creates a simple overlay with tool info and two buttons -->
     <script>
-      async function sendZplToZebra(barcodeValue) {
-    // === SAME LOGIC AS PYTHON ===
+      async function printZPLtoZebra(ip, zpl) {
+    const res = await fetch(`http://${ip}/pstprnt`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: zpl
+    });
+
+    if (!res.ok) {
+        throw new Error("Print failed: " + res.statusText);
+    }
+
+    return true;
+}
+function buildZpl(barcodeValue) {
     const labelWidth = 406;
     const labelLength = 102;
     const moduleWidth = 2;
@@ -373,7 +387,7 @@ async function loadTools() {
     const xOrigin = Math.max(0, Math.floor((labelWidth - barcodePixelWidth) / 2));
     const yOrigin = Math.max(0, Math.floor((labelLength - barcodeHeight) / 2));
 
-    const zpl = `
+    return `
 ^XA
 ^PW${labelWidth}
 ^LL${labelLength}
@@ -383,26 +397,8 @@ async function loadTools() {
 ^FD${barcodeValue}^FS
 ^XZ
 `;
-
-    console.log("Sending ZPL:", zpl);
-
-    // === WEBUSB PRINTER CONNECTION ===
-    const device = await navigator.usb.requestDevice({
-        filters: [{ vendorId: 0x0A5F }] // Zebra vendor ID
-    });
-
-    await device.open();
-    await device.selectConfiguration(1);
-    await device.claimInterface(0);
-
-    const encoder = new TextEncoder();
-    const data = encoder.encode(zpl);
-
-    // ZPL is almost always endpoint 1 OUT (0x01)
-    await device.transferOut(1, data);
-
-    console.log("Printed successfully");
 }
+
 
 
 
@@ -466,30 +462,32 @@ async function loadTools() {
 
 
       returnBtn.onclick = async () => {
-    const barcodeValue = tool.toolId || tool.id;
     try {
-        await sendZplToZebra(barcodeValue);
-        alert("Printed via USB!");
-    } catch (err) {
-        alert("Print failed: " + err.message);
-        console.error(err);
+        const id = tool.toolId || tool.id;
+        const zpl = buildZpl(id);
+        await printZPLtoZebra("192.168.xxx.xxx", zpl);
+        alert("Printed!");
+    } catch (e) {
+        alert("Print failed: " + e.message);
     }
 };
+
 
 // jimmy
 
 
 
     takeoutBtn.onclick = async () => {
-    const barcodeValue = tool.toolId || tool.id;
     try {
-        await sendZplToZebra(barcodeValue);
-        alert("Printed via USB!");
-    } catch (err) {
-        alert("Print failed: " + err.message);
-        console.error(err);
+        const id = tool.toolId || tool.id;
+        const zpl = buildZpl(id);
+        await printZPLtoZebra("192.168.xxx.xxx", zpl);
+        alert("Printed!");
+    } catch (e) {
+        alert("Print failed: " + e.message);
     }
 };
+
 
 
 

@@ -419,20 +419,17 @@ async function loadTools() {
       returnBtn.onclick = async () => {
       try {
         const id = tool.toolId || tool.id;
-
-        const res = await fetch('https://develmets.skiscratcher.com/printBarcode', {
+        const action = 'return';
+        const res = await fetch('/printBarcode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, action: 'return' })
+          credentials: 'include',
+          body: JSON.stringify({ id, action })
         });
 
         const data = await res.json();
-
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || 'Return failed');
-        }
-
-        alert('Return barcode printed!');
+        if (!res.ok || !data.success) throw new Error(data.error || JSON.stringify(data));
+        alert('Printed!');
         
       } catch (err) {
         alert('Return error: ' + err.message);
@@ -445,20 +442,17 @@ async function loadTools() {
     takeoutBtn.onclick = async () => {
       try {
         const id = tool.toolId || tool.id;
-
-        const res = await fetch('https://develmets.skiscratcher.com/printBarcode', {
+        const action = 'takeout';
+        const res = await fetch('/printBarcode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, action: 'takeout' })
+          credentials: 'include',
+          body: JSON.stringify({ id, action })
         });
 
         const data = await res.json();
-
-        if (!res.ok || !data.success) {
-          throw new Error(data.error || 'Takeout failed');
-        }
-
-        alert('Takeout barcode printed!');
+        if (!res.ok || !data.success) throw new Error(data.error || JSON.stringify(data));
+        alert('Printed!');
 
       } catch (err) {
         alert('Takeout error: ' + err.message);

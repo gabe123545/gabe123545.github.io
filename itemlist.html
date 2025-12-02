@@ -359,6 +359,55 @@ async function loadTools() {
 
     <!-- Modal helper: creates a simple overlay with tool info and two buttons -->
     <script>
+      async function sendZplToZebra(barcodeValue) {
+    // === SAME LOGIC AS PYTHON ===
+    const labelWidth = 406;
+    const labelLength = 102;
+    const moduleWidth = 2;
+    const barcodeHeight = 80;
+
+    const dataLen = barcodeValue.length;
+    const modules = 11 * dataLen + 35;
+    const barcodePixelWidth = modules * moduleWidth;
+
+    const xOrigin = Math.max(0, Math.floor((labelWidth - barcodePixelWidth) / 2));
+    const yOrigin = Math.max(0, Math.floor((labelLength - barcodeHeight) / 2));
+
+    const zpl = `
+^XA
+^PW${labelWidth}
+^LL${labelLength}
+^FO${xOrigin},${yOrigin}
+^BY${moduleWidth}
+^BCN,${barcodeHeight},Y,N,N
+^FD${barcodeValue}^FS
+^XZ
+`;
+
+    console.log("Sending ZPL:", zpl);
+
+    // === WEBUSB PRINTER CONNECTION ===
+    const device = await navigator.usb.requestDevice({
+        filters: [{ vendorId: 0x0A5F }] // Zebra vendor ID
+    });
+
+    await device.open();
+    await device.selectConfiguration(1);
+    await device.claimInterface(0);
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(zpl);
+
+    // ZPL is almost always endpoint 1 OUT (0x01)
+    await device.transferOut(1, data);
+
+    console.log("Printed successfully");
+}
+
+
+
+
+
     function showToolModal(tool) {
       // remove existing modal if any
       const existing = document.getElementById('tool-modal-overlay');
@@ -417,47 +466,31 @@ async function loadTools() {
 
 
       returnBtn.onclick = async () => {
-      try {
-        const id = tool.toolId || tool.id;
-        const action = 'return';
-        const res = await fetch('/printBarcode', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ id, action })
-        });
+    const barcodeValue = tool.toolId || tool.id;
+    try {
+        await sendZplToZebra(barcodeValue);
+        alert("Printed via USB!");
+    } catch (err) {
+        alert("Print failed: " + err.message);
+        console.error(err);
+    }
+};
 
-        const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.error || JSON.stringify(data));
-        alert('Printed!');
-        
-      } catch (err) {
-        alert('Return error: ' + err.message);
-      }
-    };
 
 
 
 
     takeoutBtn.onclick = async () => {
-      try {
-        const id = tool.toolId || tool.id;
-        const action = 'takeout';
-        const res = await fetch('/printBarcode', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ id, action })
-        });
+    const barcodeValue = tool.toolId || tool.id;
+    try {
+        await sendZplToZebra(barcodeValue);
+        alert("Printed via USB!");
+    } catch (err) {
+        alert("Print failed: " + err.message);
+        console.error(err);
+    }
+};
 
-        const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.error || JSON.stringify(data));
-        alert('Printed!');
-
-      } catch (err) {
-        alert('Takeout error: ' + err.message);
-      }
-    };
 
 
     }

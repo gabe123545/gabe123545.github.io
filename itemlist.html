@@ -359,136 +359,96 @@ async function loadTools() {
 
     <!-- Modal helper: creates a simple overlay with tool info and two buttons -->
     <script>
-      function buildZpl(barcodeValue) {
-    const labelWidth = 406;
-    const labelLength = 102;
-    const moduleWidth = 2;
-    const barcodeHeight = 80;
+      function showToolModal(tool) {
+    // Remove existing modal if any
+    const existing = document.getElementById('tool-modal-overlay');
+    if (existing) existing.remove();
 
-    const dataLen = barcodeValue.length;
-    const modules = 11 * dataLen + 35;
-    const barcodePixelWidth = modules * moduleWidth;
+    const overlay = document.createElement('div');
+    overlay.id = 'tool-modal-overlay';
+    Object.assign(overlay.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999
+    });
 
-    const xOrigin = Math.max(0, Math.floor((labelWidth - barcodePixelWidth) / 2));
-    const yOrigin = Math.max(0, Math.floor((labelLength - barcodeHeight) / 2));
+    const box = document.createElement('div');
+    Object.assign(box.style, {
+        background: '#fff',
+        padding: '20px',
+        borderRadius: '8px',
+        width: '320px',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.2)'
+    });
 
-    return `
-^XA
-^PW${labelWidth}
-^LL${labelLength}
-^FO${xOrigin},${yOrigin}
-^BY${moduleWidth}
-^BCN,${barcodeHeight},Y,N,N
-^FD${barcodeValue}^FS
-^XZ
-`;
+    const title = document.createElement('h3');
+    title.innerText = 'Tool Actions';
+    title.style.marginTop = '0';
+
+    const info = document.createElement('div');
+    info.style.margin = '10px 0';
+    info.innerHTML = `<strong>ID:</strong> ${tool.toolId || tool.id || ''}<br><strong>Name:</strong> ${tool.toolName || tool.name || ''}`;
+
+    const btnRow = document.createElement('div');
+    btnRow.style.display = 'flex';
+    btnRow.style.justifyContent = 'space-between';
+    btnRow.style.gap = '8px';
+
+    const returnBtn = document.createElement('button');
+    returnBtn.innerText = 'Return';
+    Object.assign(returnBtn.style, { flex: '1', padding: '8px', background: '#b71c1c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+    const takeoutBtn = document.createElement('button');
+    takeoutBtn.innerText = 'Takeout';
+    Object.assign(takeoutBtn.style, { flex: '1', padding: '8px', background: '#1976d2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerText = 'Close';
+    Object.assign(closeBtn.style, { marginTop: '12px', padding: '8px', width: '100%', background: '#eee', border: 'none', borderRadius: '4px', cursor: 'pointer' });
+
+    btnRow.appendChild(returnBtn);
+    btnRow.appendChild(takeoutBtn);
+    box.appendChild(title);
+    box.appendChild(info);
+    box.appendChild(btnRow);
+    box.appendChild(closeBtn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Handlers
+    closeBtn.onclick = () => overlay.remove();
+
+    async function handlePrint(action) {
+        const id = tool.toolId || tool.id;
+        if (!id) return alert('Invalid tool ID');
+
+        try {
+            const res = await fetch('/printBarcode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, action })
+            });
+
+            const data = await res.json();
+            if (!data.success) throw new Error(data.error || 'Unknown error');
+
+            alert(`${action === 'return' ? 'Return' : 'Takeout'} label printed successfully!`);
+        } catch (err) {
+            alert('Print failed: ' + err.message);
+        }
+    }
+
+    returnBtn.onclick = () => handlePrint('return');
+    takeoutBtn.onclick = () => handlePrint('takeout');
 }
 
-
-
-
-
-    function showToolModal(tool) {
-      // remove existing modal if any
-      const existing = document.getElementById('tool-modal-overlay');
-      if (existing) existing.remove();
-
-      const overlay = document.createElement('div');
-      overlay.id = 'tool-modal-overlay';
-      Object.assign(overlay.style, {
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999
-      });
-
-      const box = document.createElement('div');
-      Object.assign(box.style, {
-        background: '#fff', padding: '20px', borderRadius: '8px', width: '320px', boxShadow: '0 8px 30px rgba(0,0,0,0.2)'
-      });
-
-      const title = document.createElement('h3');
-      title.innerText = 'Tool Actions';
-      title.style.marginTop = '0';
-
-      const info = document.createElement('div');
-      info.style.margin = '10px 0';
-      info.innerHTML = `<strong>ID:</strong> ${tool.toolId || tool.id || ''}<br><strong>Name:</strong> ${tool.toolName || tool.name || ''}`;
-
-      const btnRow = document.createElement('div');
-      btnRow.style.display = 'flex';
-      btnRow.style.justifyContent = 'space-between';
-      btnRow.style.gap = '8px';
-
-      const returnBtn = document.createElement('button');
-      returnBtn.innerText = 'Return';
-      Object.assign(returnBtn.style, { flex: '1', padding: '8px', background: '#b71c1c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
-
-      const takeoutBtn = document.createElement('button');
-      takeoutBtn.innerText = 'Takeout';
-      Object.assign(takeoutBtn.style, { flex: '1', padding: '8px', background: '#1976d2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' });
-
-      const closeBtn = document.createElement('button');
-      closeBtn.innerText = 'Close';
-      Object.assign(closeBtn.style, { marginTop: '12px', padding: '8px', width: '100%', background: '#eee', border: 'none', borderRadius: '4px', cursor: 'pointer' });
-
-      btnRow.appendChild(returnBtn);
-      btnRow.appendChild(takeoutBtn);
-      box.appendChild(title);
-      box.appendChild(info);
-      box.appendChild(btnRow);
-      box.appendChild(closeBtn);
-      overlay.appendChild(box);
-      document.body.appendChild(overlay);
-
-      // Handlers
-      closeBtn.onclick = () => overlay.remove();
-
-      
-
-
-      returnBtn.onclick = async () => {
-    const barcodeValue = tool.toolId || tool.id;
-    const zpl = buildZpl(barcodeValue);
-
-    try {
-        const res = await fetch('/printBarcode.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ zpl })
-        });
-
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error || 'Unknown error');
-
-        alert('Return label printed!');
-    } catch (err) {
-        alert('Print failed: ' + err.message);
-    }
-};
-
-takeoutBtn.onclick = async () => {
-    const barcodeValue = tool.toolId || tool.id;
-    const zpl = buildZpl(barcodeValue);
-
-    try {
-        const res = await fetch('/printBarcode.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ zpl })
-        });
-
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error || 'Unknown error');
-
-        alert('Takeout label printed!');
-    } catch (err) {
-        alert('Print failed: ' + err.message);
-    }
-};
-
-
-
-
-    }
     </script>
 
 </body>

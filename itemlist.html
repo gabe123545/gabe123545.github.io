@@ -359,8 +359,7 @@ async function loadTools() {
 
     <!-- Modal helper: creates a simple overlay with tool info and two buttons -->
     <script>
-      async function sendZplToZebra(barcodeValue) {
-    // === SAME LOGIC AS PYTHON ===
+      function buildZpl(barcodeValue) {
     const labelWidth = 406;
     const labelLength = 102;
     const moduleWidth = 2;
@@ -373,7 +372,7 @@ async function loadTools() {
     const xOrigin = Math.max(0, Math.floor((labelWidth - barcodePixelWidth) / 2));
     const yOrigin = Math.max(0, Math.floor((labelLength - barcodeHeight) / 2));
 
-    const zpl = `
+    return `
 ^XA
 ^PW${labelWidth}
 ^LL${labelLength}
@@ -383,25 +382,6 @@ async function loadTools() {
 ^FD${barcodeValue}^FS
 ^XZ
 `;
-
-    console.log("Sending ZPL:", zpl);
-
-    // === WEBUSB PRINTER CONNECTION ===
-    const device = await navigator.usb.requestDevice({
-        filters: [{ vendorId: 0x0A5F }] // Zebra vendor ID
-    });
-
-    await device.open();
-    await device.selectConfiguration(1);
-    await device.claimInterface(0);
-
-    const encoder = new TextEncoder();
-    const data = encoder.encode(zpl);
-
-    // ZPL is almost always endpoint 1 OUT (0x01)
-    await device.transferOut(1, data);
-
-    console.log("Printed successfully");
 }
 
 
@@ -467,29 +447,44 @@ async function loadTools() {
 
       returnBtn.onclick = async () => {
     const barcodeValue = tool.toolId || tool.id;
+    const zpl = buildZpl(barcodeValue);
+
     try {
-        await sendZplToZebra(barcodeValue);
-        alert("Printed via USB!");
+        const res = await fetch('/printBarcode.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ zpl })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Unknown error');
+
+        alert('Return label printed!');
     } catch (err) {
-        alert("Print failed: " + err.message);
-        console.error(err);
+        alert('Print failed: ' + err.message);
     }
 };
 
-// jimmy
-
-
-
-    takeoutBtn.onclick = async () => {
+takeoutBtn.onclick = async () => {
     const barcodeValue = tool.toolId || tool.id;
+    const zpl = buildZpl(barcodeValue);
+
     try {
-        await sendZplToZebra(barcodeValue);
-        alert("Printed via USB!");
+        const res = await fetch('/printBarcode.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ zpl })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Unknown error');
+
+        alert('Takeout label printed!');
     } catch (err) {
-        alert("Print failed: " + err.message);
-        console.error(err);
+        alert('Print failed: ' + err.message);
     }
 };
+
 
 
 

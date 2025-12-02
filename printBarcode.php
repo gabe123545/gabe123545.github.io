@@ -1,64 +1,36 @@
 <?php
+// printBarcode.php
+
 header("Content-Type: application/json");
 
-$input = json_decode(file_get_contents("php://input"), true);
-
-$id = $input["id"] ?? null;
-$action = $input["action"] ?? null;
-
-if (!$id || !$action) {
-    echo json_encode([
-        "success" => false,
-        "error" => "Missing body. Required: { id: number, action: 'takeout'|'return' }"
-    ]);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Invalid request method']);
     exit;
 }
 
-$allowed = ["takeout", "return"];
-if (!in_array($action, $allowed)) {
-    echo json_encode([
-        "success" => false,
-        "error" => "Invalid action, allowed: 'takeout' | 'return'"
-    ]);
+$data = json_decode(file_get_contents('php://input'), true);
+if (!isset($data['zpl'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Missing ZPL data']);
     exit;
 }
 
-// Same logic as your Node.js file
-$prefix = $action === "return" ? "RKTM" : "KTM";
-$barcodeValue = $prefix . $id;
+$printerIp = '192.168.1.42'; // Your ZD411 IP
+$printerPort = 9100;         // Zebra raw TCP port
+$zpl = $data['zpl'];
 
-// Printer defaults
-$PRINTER_NAME  = getenv("BARCODE_PRINTER_NAME") ?: "ZDesigner ZD411-203dpi ZPL";
-$PYTHON_CMD    = getenv("PYTHON_CMD") ?: "python3";
-
-// Path to Python script (same folder as this PHP file)
-$pythonScript = __DIR__ . "/send_zebra_usb.py";
-
-// Escape shell arguments
-$escPrinter = escapeshellarg($PRINTER_NAME);
-$escBarcode = escapeshellarg($barcodeValue);
-$escScript  = escapeshellarg($pythonScript);
-
-// Build the command
-$cmd = "$PYTHON_CMD $escScript $escPrinter $escBarcode 2>&1";
-
-// Run the Python script
-$output = shell_exec($cmd);
-
-// Handle errors
-if ($output === null) {
-    echo json_encode([
-        "success" => false,
-        "error" => "Failed to execute Python script"
-    ]);
+// Connect to printer
+$fp = @fsockopen($printerIp, $printerPort, $errno, $errstr, 5);
+if (!$fp) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => "Connection failed: $errstr ($errno)"]);
     exit;
 }
 
-// Return success to JS
-echo json_encode([
-    "success" => true,
-    "message" => "Barcode printed successfully.",
-    "printerOutput" => trim($output)
-]);
+// Send ZPL
+fwrite($fp, $zpl);
+fclose($fp);
 
+echo json_encode(['success' => true]);
 ?>

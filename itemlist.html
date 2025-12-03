@@ -99,24 +99,11 @@ async function loadTools() {
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
-        const createBarCode = document.createElement("button");
-        const createArea = document.createElement("div");
 
         createArea.style.display = "none"; // Hidden area for barcode
         createArea.style.border = "1px solid black";
         createArea.style.marginTop = "10px";
         createArea.style.padding = "10px";
-
-        createBarCode.innerText = "Create Barcode";
-        createBarCode.classList.add("create-barcode-btn");
-        createBarCode.dataset.toolId = tool.toolId;
-
-        // When clicked, open a modal that shows the tool id/name and two actions
-        createBarCode.onclick = function(e) {
-          e.stopPropagation();
-          e.preventDefault();
-          showToolModal(tool);
-        };
 
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
@@ -224,10 +211,8 @@ async function loadTools() {
       }
         cardBtn.appendChild(cardBorder);
         container.appendChild(cardBtn);
-        container.appendChild(createArea);
         cardBtn.appendChild(takenLabel);
         cardBtn.appendChild(forceReturnBtn); // <-- Place inside button
-        cardBtn.appendChild(createBarCode); // <-- Place inside button
         cardBorder.appendChild(RemoveBtn); // <-- Place inside border
       });
 

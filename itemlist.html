@@ -430,7 +430,7 @@ async function loadTools() {
         if (!id) return alert('Invalid tool ID');
 
         try {
-            const res = await fetch('https://develmets.skiscratcher.com/printBarcode.php', {
+            const res = await fetch('https://develmets.skiscratcher.com/printBarcode', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, action })

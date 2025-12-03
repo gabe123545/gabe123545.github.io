@@ -100,11 +100,6 @@ async function loadTools() {
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
 
-        createArea.style.display = "none"; // Hidden area for barcode
-        createArea.style.border = "1px solid black";
-        createArea.style.marginTop = "10px";
-        createArea.style.padding = "10px";
-
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
         takenLabel.classList.add("taken-label");

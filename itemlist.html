@@ -70,7 +70,8 @@
       <input type="text" id="nameInput" name="nameInput" required>
       <button type="button" onclick="itemSpawn()">Add Tool</button>
       <label for="nameInput">Material Name</label>
-      <input type="text" id="quantityInput" name="quantityInput" required>
+      <input type="text" id="nameQuantity" name="nameQuantity" required>
+      <label for="nameInput">Quantity</label>
       <input type="number" id="quantityInput" name="quantityInput" required>
       <button type="button" onclick="addMaterial()">Add Material</button>
       <button type="button" onclick="closeItemForm()" style="background:#b71c1c;margin-top:0;">Cancel</button>
@@ -230,7 +231,7 @@ async function loadTools() {
 
 
   const fd = new URLSearchParams({
-    name: nameInput,
+    name: nameQuantity,
     quantity: quantityInput,
   });
 

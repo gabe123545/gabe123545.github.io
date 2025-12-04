@@ -80,6 +80,148 @@
 
 <script>
 
+async function loadMaterials() {
+    try {
+      const response = await fetch("https://develmets.skiscratcher.com/getMaterials", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch tools:", response.status);
+        return;
+      }
+
+      const Materials = await response.json();
+      const container = document.querySelector(".grid-container");
+      container.innerHTML = ""; // Clear existing items
+
+      Materials.forEach(Materials => {
+        const cardBtn = document.createElement("button");
+        const cardBorder = document.createElement("div");
+        const innerCardText = document.createElement("p");
+        const RemoveBtn = document.createElement("button");
+        const takenLabel = document.createElement("span");
+        const forceReturnBtn = document.createElement("button");
+
+      if(Materials.takenBy == null){
+        takenLabel.innerText = "Available";
+        takenLabel.classList.add("taken-label");
+
+        cardBorder.classList.add("border");
+        cardBtn.classList.add("grid-item");
+
+        innerCardText.innerText = `${Materials.materialName}`;
+        cardBorder.appendChild(innerCardText);
+
+        // Add Remove button inside the border
+        RemoveBtn.innerText = "Remove";
+        RemoveBtn.classList.add("remove-btn");
+        console.log(Materials);
+        RemoveBtn.dataset.materialId = Materials.materialId;
+       }
+       else{
+        takenLabel.innerText = "Taken";
+        takenLabel.classList.add("taken-label");
+
+        forceReturnBtn.innerText = "Force Return";
+        forceReturnBtn.classList.add("force-return-btn");
+        forceReturnBtn.dataset.materialId = Materials.materialId;
+
+
+        cardBorder.classList.add("border");
+        cardBtn.classList.add("grid-item");
+
+        innerCardText.innerText = `${Materials.materialName}`;
+        cardBorder.appendChild(innerCardText);
+
+        // Add Remove button inside the border
+        RemoveBtn.innerText = "Remove";
+        RemoveBtn.classList.add("remove-btn");
+        console.log(tool);
+        RemoveBtn.dataset.materialId = Materials.materialName;
+       }
+       
+       forceReturnBtn.onclick = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      
+      if (confirm(`Are you sure you want to force return ${Materials.materialName}?`)) {
+          try {
+              const materialId = forceReturnBtn.dataset.materialId;
+
+              const response = await fetch(
+                  `https://develmets.skiscratcher.com/returnMaterials?id=${materialId}`,
+                  {
+                      method: "POST",   // or POST if your backend expects POST
+                      credentials: "include"
+                  }
+              );
+
+              if (response.ok) {
+                  const result = await response.json();
+
+                  if (result.success || result.returned || result.msg === "Material returned") {
+                      await loadTools();  // Refresh tool list in UI
+                  } else {
+                      alert("Failed to force return Material: " + JSON.stringify(result));
+                  }
+              } else {
+                  const text = await response.text();
+                  alert("Failed to force return Material: " + text);
+              }
+          } catch (err) {
+              alert("Error forcing return of Material: " + err);
+          }
+        }
+      }
+
+        RemoveBtn.onclick = async function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if(Materials.takenBy != null){
+          alert("Cannot remove a taken tool.");
+          return;
+        }
+        if (confirm(`Are you sure you want to remove ${Materials.materialName}?`)) {
+          try {
+            var toolId = RemoveBtn.dataset.toolId;
+            console.log(toolId);
+            const response = await fetch(`https://develmets.skiscratcher.com/removeTool?id=${materialId}`, {
+            method: "DELETE",
+            credentials: "include"
+          });
+
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success) {
+                await loadTools(); // refresh the list
+              } else {
+                alert("Failed to remove tool: " + result.msg);
+              }
+            } else {
+              const text = await response.text();
+              alert("Failed to remove tool: " + text);
+            }
+          } catch (err) {
+            alert("Error removing tool: " + err);
+          }
+        }
+      }
+        cardBtn.appendChild(cardBorder);
+        container.appendChild(cardBtn);
+        cardBtn.appendChild(takenLabel);
+        cardBtn.appendChild(forceReturnBtn); // <-- Place inside button
+        cardBorder.appendChild(RemoveBtn); // <-- Place inside border
+      });
+
+    } catch (error) {
+      console.error("Error loading tools:", error);
+    }
+  }
+
+
+
 
 async function loadTools() {
     try {
@@ -220,7 +362,7 @@ async function loadTools() {
       console.error("Error loading tools:", error);
     }
   }
-
+window.addEventListener("DOMContentLoaded", loadMaterials);
   async function addMaterial() {
     const nameInput = document.getElementById("nameInput").value.trim();
     const quantityInput = document.getElementById("quantityInput").value.trim();

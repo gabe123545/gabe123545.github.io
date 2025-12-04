@@ -335,7 +335,7 @@ async function loadTools() {
             credentials: "include"
           });
 
-            if (response.ok) {
+            if (response.ok) {  
               const result = await response.json();
               if (result.success) {
                 await loadTools(); // refresh the list
@@ -364,7 +364,7 @@ async function loadTools() {
   }
 window.addEventListener("DOMContentLoaded", loadMaterials);
   async function addMaterial() {
-    const nameInput = document.getElementById("nameInput").value.trim();
+    const nameQuantity = document.getElementById("nameQuantity").value.trim();
     const quantityInput = document.getElementById("quantityInput").value.trim();
   if (!nameQuantity || !quantityInput) {
     alert("Please fill in all fields.");

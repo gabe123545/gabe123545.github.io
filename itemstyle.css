@@ -28,7 +28,7 @@ body {
   
 .btnTools{
     position: absolute;
-    top: 100px;
+    top: 102px;
     left: 20px;
     background-color: #d32f2f;
     color: white;
@@ -41,8 +41,8 @@ body {
 }
 .btnMaterials{
     position: absolute;
-    top: 100px;
-    left: 120px;
+    top: 102px;
+    left: 110px;
     background-color: #d32f2f;
     color: white;
     padding: 10px 20px;

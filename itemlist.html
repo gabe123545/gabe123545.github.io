@@ -113,7 +113,7 @@ async function loadMaterials() {
         cardBtn.classList.add("grid-item");
 
         innerCardText.innerText = `${Materials.materialName}`;
-        innerCardNumber.innerText = `Quantity: ${Materials.quantity}`;
+        innerCardNumber.innerText = `Quantity: ${Materials.currentAmount}`;
         cardBorder.appendChild(innerCardNumber);
         cardBorder.appendChild(innerCardText);
 

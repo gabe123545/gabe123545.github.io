@@ -101,6 +101,7 @@ async function loadMaterials() {
         const cardBtn = document.createElement("button");
         const cardBorder = document.createElement("div");
         const innerCardText = document.createElement("p");
+        const innerCardNumber = document.createElement("p");
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
@@ -108,11 +109,12 @@ async function loadMaterials() {
       if(Materials.takenBy == null){
         takenLabel.innerText = "Available";
         takenLabel.classList.add("taken-label");
-
         cardBorder.classList.add("border");
         cardBtn.classList.add("grid-item");
 
         innerCardText.innerText = `${Materials.materialName}`;
+        innerCardNumber.innerText = `Quantity: ${Materials.quantity}`;
+        cardBorder.appendChild(innerCardNumber);
         cardBorder.appendChild(innerCardText);
 
         // Add Remove button inside the border
@@ -210,6 +212,7 @@ async function loadMaterials() {
         }
       }
         cardBtn.appendChild(cardBorder);
+
         container.appendChild(cardBtn);
         cardBtn.appendChild(takenLabel);
         cardBtn.appendChild(forceReturnBtn); // <-- Place inside button

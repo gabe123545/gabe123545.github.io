@@ -94,7 +94,7 @@
       // Approve user by calling the endpoint
       async function approveUser(userId) {
         try {
-          const response = await fetch("https://develmets.skiscratcher.com/approveUsers", {
+          const response = await fetch("https://develmets.skiscratcher.com/approveUser", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({ id: userId }),

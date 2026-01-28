@@ -39,6 +39,7 @@ body {
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
+    z-index: 3000;
 }
 .btnMaterials{
     position: fixed;
@@ -52,6 +53,7 @@ body {
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
+    z-index: 3000;
 }
 /* Button used to open the contact form - fixed at the bottom of the page */
 .open-button {

@@ -299,7 +299,7 @@ async function loadTools() {
               const toolId = forceReturnBtn.dataset.toolId;
 
               const response = await fetch(
-                  `https://develmets.skiscratcher.com/returnTool?id=${toolId}`,
+                  `https://develmets.skiscratcher.com/forceReturnTool?id=${toolId}`,
                   {
                       method: "POST",   // or POST if your backend expects POST
                       credentials: "include"

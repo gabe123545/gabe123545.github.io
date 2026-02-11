@@ -361,6 +361,9 @@ async function loadTools() {
               name: newName
             });
             try {
+              console.log("toolId:", tool.toolId);
+              console.log("newName:", newName);
+              console.log("fd:", fd.toString());
               const response = await fetch("https://develmets.skiscratcher.com/editTool", {
                 method: "POST",
                 body: fd,

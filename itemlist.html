@@ -106,6 +106,7 @@ async function loadMaterials() {
         const RemoveBtn = document.createElement("button");
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
+        const BtnEdit = document.createElement("button");
 
       if(Materials.takenBy == null){
         takenLabel.innerText = "Available";
@@ -252,6 +253,7 @@ async function loadTools() {
         const takenLabel = document.createElement("span");
         const forceReturnBtn = document.createElement("button");
         const innerCardTakenBy = document.createElement("p");
+        const BtnEditTool = document.createElement("button");
 
       if(tool.takenBy == null){
         takenLabel.innerText = "Available";
@@ -290,6 +292,9 @@ async function loadTools() {
         console.log(tool);
         RemoveBtn.dataset.toolId = tool.toolId;
        }
+       BtnEditTool.innerText = "Edit";
+       BtnEditTool.classList.add("edit-btn");
+       BtnEditTool.dataset.toolId = tool.toolId;
        
        forceReturnBtn.onclick = async function (e) {
         e.stopPropagation();
@@ -323,6 +328,66 @@ async function loadTools() {
               alert("Error forcing return of tool: " + err);
           }
         }
+      }
+      const newArea = document.createElement("div");
+      newArea.style.position = "fixed";
+      newArea.style.top = "50%";
+      newArea.style.left = "50%";
+      newArea.style.transform = "translate(-50%, -50%)";
+      newArea.style.backgroundColor = "#fff";
+      newArea.style.padding = "20px";
+      newArea.style.display = "none";
+      newArea.style.zIndex = "1000";
+
+      BtnEditTool.onclick = async function(e) {
+        newArea.style.display = "block";
+        
+        newArea.innerHTML = `
+          <h2>Edit Tool</h2>
+          <label for="editName">Name:</label>
+          <input type="text" id="editName" value="${tool.toolName}">
+          <button id="saveBtn">Save</button>
+          <button id="cancelBtn">Cancel</button>
+        `;
+
+        const saveBtn = document.getElementById("saveBtn");
+        const cancelBtn = document.getElementById("cancelBtn");
+
+        saveBtn.onclick = async function() {
+          const newName = document.getElementById("editName").value.trim();
+          if (newName) {
+            const fd = new URLSearchParams({
+              id: tool.toolId,
+              name: newName
+            });
+            try {
+              const response = await fetch("https://develmets.skiscratcher.com/editTool", {
+                method: "POST",
+                body: fd,
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                credentials: "include"
+              });
+
+              const responseText = await response.text();
+              console.log("Backend response:", responseText);
+
+              if (response.ok) {
+                await loadTools(); // Refresh the list
+                newArea.style.display = "none";
+              } else {
+                alert("Error editing tool: " + responseText);
+              }
+            } catch (err) {
+              alert("Error editing tool: " + err);
+            }
+          }
+        };
+
+        cancelBtn.onclick = function() {
+          newArea.style.display = "none";
+        };
       }
 
         RemoveBtn.onclick = async function (e) {
@@ -360,6 +425,7 @@ async function loadTools() {
         cardBtn.appendChild(cardBorder);
         container.appendChild(cardBtn);
         cardBtn.appendChild(takenLabel);
+        cardBtn.appendChild(BtnEdit);
         cardBtn.appendChild(forceReturnBtn); // <-- Place inside button
         cardBorder.appendChild(RemoveBtn); // <-- Place inside border
       });

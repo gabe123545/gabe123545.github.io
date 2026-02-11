@@ -358,7 +358,7 @@ async function loadTools() {
           if (newName) {
             const fd = new URLSearchParams({
               id: tool.toolId,
-              name: newName
+              toolName: newName
             });
             try {
               console.log("toolId:", tool.toolId);

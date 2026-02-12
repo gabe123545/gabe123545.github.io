@@ -147,6 +147,11 @@ async function loadMaterials() {
         RemoveBtn.dataset.materialId = Materials.materialName;
        }
        
+       BtnEditMaterial.innerText = "Edit";
+       BtnEditMaterial.classList.add("edit-btn");
+       BtnEditMaterial.dataset.materialId = Materials.materialId;
+
+
         const newAreaMats = document.createElement("div");
         newAreaMats.style.position = "fixed";
         newAreaMats.style.top = "50%";

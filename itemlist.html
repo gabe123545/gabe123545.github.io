@@ -147,21 +147,21 @@ async function loadMaterials() {
         RemoveBtn.dataset.materialId = Materials.materialName;
        }
        
-        const newArea = document.createElement("div");
-        newArea.style.position = "fixed";
-        newArea.style.top = "50%";
-        newArea.style.left = "50%";
-        newArea.style.transform = "translate(-50%, -50%)";
-        newArea.style.backgroundColor = "#fff";
-        newArea.style.padding = "20px";
-        newArea.style.display = "none";
-        newArea.style.zIndex = "1000";
-        newArea.style.border = "2px solid #000";
+        const newAreaMats = document.createElement("div");
+        newAreaMats.style.position = "fixed";
+        newAreaMats.style.top = "50%";
+        newAreaMats.style.left = "50%";
+        newAreaMats.style.transform = "translate(-50%, -50%)";
+        newAreaMats.style.backgroundColor = "#fff";
+        newAreaMats.style.padding = "20px";
+        newAreaMats.style.display = "none";
+        newAreaMats.style.zIndex = "1000";
+        newAreaMats.style.border = "2px solid #000";
 
       BtnEditMaterial .onclick = async function(e) {
-        newArea.style.display = "block";
+        newAreaMats.style.display = "block";
 
-        newArea.innerHTML = `
+        newAreaMats.innerHTML = `
           <h2>Edit Tool</h2>
           <label for="editName">Name:</label>
           <input type="text" class="editName" value="${tool.toolName}">
@@ -194,7 +194,7 @@ async function loadMaterials() {
 
             if (response.ok) {
               await loadTools();
-              newArea.style.display = "none";
+              newAreaMats.style.display = "none";
             } else {
               alert("Error editing tool: " + responseText);
             }
@@ -204,7 +204,7 @@ async function loadMaterials() {
         };
 
         cancelBtn.onclick = function() {
-          newArea.style.display = "none";
+          newAreaMats.style.display = "none";
         };
       };
 
@@ -280,7 +280,7 @@ async function loadMaterials() {
         cardBtn.appendChild(cardBorder);
 
         container.appendChild(cardBtn);
-        container.appendChild(newArea);
+        container.appendChild(newAreaMats);
         cardBtn.appendChild(takenLabel);
         cardBtn.appendChild(BtnEditMaterial); 
         cardBtn.appendChild(forceReturnBtn); // <-- Place inside button

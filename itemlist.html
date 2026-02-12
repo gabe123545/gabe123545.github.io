@@ -184,7 +184,7 @@ async function loadMaterials() {
           const newQuantity = document.getElementsByClassName("editQuantity")[0].value.trim();
 
           try {
-            const response = await fetch("https://develmets.skiscratcher.com/editTool", {
+            const response = await fetch("https://develmets.skiscratcher.com/editMaterial", {
               method: "POST",
               body: new URLSearchParams({ id: tool.toolId, name: newName, quantity: newQuantity }),
               headers: {

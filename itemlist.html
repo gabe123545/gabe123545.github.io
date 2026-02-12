@@ -162,6 +162,8 @@ async function loadMaterials() {
         newAreaMats.style.display = "none";
         newAreaMats.style.zIndex = "1000";
         newAreaMats.style.border = "2px solid #000";
+        newAreaMats.style.width = "300px";
+        newAreaMats.stylr.height = "200px";
 
       BtnEditMaterial .onclick = async function(e) {
         newAreaMats.style.display = "block";
@@ -283,7 +285,6 @@ async function loadMaterials() {
         }
       }
         cardBtn.appendChild(cardBorder);
-
         container.appendChild(cardBtn);
         container.appendChild(newAreaMats);
         cardBtn.appendChild(takenLabel);

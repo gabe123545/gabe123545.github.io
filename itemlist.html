@@ -162,8 +162,6 @@ async function loadMaterials() {
         newAreaMats.style.display = "none";
         newAreaMats.style.zIndex = "1000";
         newAreaMats.style.border = "2px solid #000";
-        newAreaMats.style.width = "300px";
-        newAreaMats.style.height = "200px";
 
       BtnEditMaterial .onclick = async function(e) {
         newAreaMats.style.display = "block";
@@ -171,9 +169,9 @@ async function loadMaterials() {
         newAreaMats.innerHTML = `
           <h2>Edit Tool</h2>
           <label for="editName">Name:</label>
-          <input type="text" class="editName" value="${tool.toolName}">
+          <input type="text" class="editName" value="${Materials.materialName}">
           <label for="editQuantity">Quantity:</label>
-          <input type="number" class="editQuantity" value="${tool.currentAmount}">
+          <input type="number" class="editQuantity" value="${Materials.amount}">
           <button class="saveBtn">Save</button>
           <button class="cancelBtn">Cancel</button>
         `;

@@ -186,7 +186,7 @@ async function loadMaterials() {
           try {
             const response = await fetch("https://develmets.skiscratcher.com/editMaterial", {
               method: "POST",
-              body: new URLSearchParams({ id: tool.toolId, name: newName, quantity: newQuantity }),
+              body: new URLSearchParams({ id: Materials.materialId, name: newName, quantity: newQuantity }),
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
               },

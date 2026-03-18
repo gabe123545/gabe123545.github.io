@@ -177,6 +177,88 @@ button {
   display: none;
 }
 
+.open-button {
+    background-color: #d32f2f;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    top: 20px;
+    right: 28px;
+    border: none;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.08);
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 15px;
+    border: 3px solid #d32f2f;
+    z-index: 9;
+    border-radius: 25px;
+    background: white;
+}
+  
+  /*----------------Add styles to the form container----------------*/
+.form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.08);
+}
+
+.form-container input[type=text], .form-container input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+}
+  
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-bottom:10px;
+    opacity: 0.9;
+    width: 100%;
+    background-color: #d32f2f;
+    font-weight: bold;
+    padding: 14px 0;
+    transition: background 0.2s;
+}
+  
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+    background-color: #b71c1c;
+    padding: 16px 20px;
+}
+  
+/* Add a background color to the logout button */
+.form-container .logout {
+    background-color: #d32f2f;
+    padding: 6px 10px;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+    opacity: 1;
+}
+
 .student, .student td{
   background-color: rgb(230, 230, 230);
 }

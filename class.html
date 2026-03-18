@@ -29,7 +29,33 @@
       <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
       </a>
+       <!--Profile Button-->
+      <button class="open-button" onclick="openForm()">Profile</button>
     </div>
+      
+  </nav>
+
+  <div class="form-popup" id="myForm">
+    <form action="/action_page.php" class="form-container">
+      <h1><i>Profile</h1></i>
+
+      <!--Your name will display -->
+      <h4 id="Name">Jam</h4>
+      <!--profile pic will display-->
+      <div class="prof">
+        <button type="button" class="pfp" onclick="closeForm()"><img src="Images/metalIcon.jpg" width="80" alt="placeholder"></button>
+      </div>
+      <!--displays the email-->
+      <h4 id="Email">jam@jpkeefehs.org</h4>
+      <!--What type of account they have (student or admin)-->
+      <h5 id="Account">Student Account</h5>
+      <a href="Profile.html"><button type="button" class="btn Manage account">Manage Account</button> </a>
+      <!--Log out of your account and bring you back to the login page--> 
+      <button type="button" class="btn logout" onclick="logout()" >logout</button>
+      <!--Closes the profile button and goes back to the item page-->
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    </form>
+  </div>
       
   </nav>
 
@@ -136,6 +162,34 @@
     alert("Error fetching classes: " + err);
   }
 }
+
+    async function logout() {
+    try {
+      // Call the remote backend logout endpoint
+      const response = await fetch("https://develmets.skiscratcher.com/logout", {
+        method: "GET", 
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        console.log("Successfully logged out from remote server.");
+        window.location.href = "login.html";
+      } else {
+        console.warn("Remote logout failed:", response.status);
+      }
+    } catch (error) {
+      console.error("Logout request failed:", error);
+    }
+    
+
+  }
+
+  function openForm() {
+    document.getElementById("myForm").style.display = "block";
+  }
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
 
       // Update the class dropdown in the Add Student form
       // This writes one <option> per class. The option.value stores the backend classId

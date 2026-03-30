@@ -149,8 +149,9 @@
     classes.length = 0;
     classList.forEach(cls => {
       // backend returns `classId` — use that consistently
+      const classCode = Date.now();
       const id = cls.classId !== undefined ? cls.classId : cls.id;
-      classes.push({ className: cls.className, id: id, classId: id });
+      classes.push({ className: cls.className, id: id, classId: id, classCode: classCode });
       if (!studentsByClass[id]) studentsByClass[id] = [];
     });
     updateClassDropdown();
@@ -275,7 +276,6 @@
         }
       }
 
-
       // Fetch assigned students for each class from backend
       // This populates `studentsByClass[classId]` and `assignedStudentIds`.
       // The /users endpoint returns an array of users; when a user has a class assignment
@@ -397,6 +397,8 @@
           container.appendChild(classDiv);
         });
       }
+
+
 
 
 // Initialize dropdown and fetch classes/students on page load

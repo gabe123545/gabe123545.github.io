@@ -123,6 +123,7 @@
       return;
     }
     document.getElementById("cName").value = "";
+    addClassCode(); // Create a class code for the new class
     await fetchAndRenderClasses(); // Update the UI with new classes from the database
   } catch (err) {
     alert("Error creating class: " + err);

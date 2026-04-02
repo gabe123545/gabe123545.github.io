@@ -82,48 +82,51 @@
 
 <script>
 
-async function loadProfileInfo() {
-    const accountInfo = await accountInfo();
+async function getAccountInfo() {
+    try {
+        const response = await fetch("https://develmets.skiscratcher.com/loginInfo", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            console.error("Failed to fetch account info.");
+            return;
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (err) {
+        console.error("Error fetching account info:", err);
+    }
+}
+    async function loadProfileInfo() {
+    const accountInfo = await getAccountInfo(); // ✅ FIXED
+
     if (!accountInfo) {
         document.getElementById("Name").innerHTML = "<i>Name:</i> N/A";
         document.getElementById("Email").innerHTML = "<i>Email:</i> N/A";
-        document.getElementById("Account").innerHTML = "<i>Account Type:</i> N/A";
+        document.getElementById("Account-Type").innerHTML = "<i>Account Type:</i> N/A";
         return;
     }
+
     document.getElementById("Name").innerHTML = `<i>Name:</i> ${accountInfo.username}`;
     document.getElementById("Email").innerHTML = `<i>Email:</i> ${accountInfo.email}`;
     let accountTypeText = "Unknown Account Type";
     switch (accountInfo.userType) {
         case 0:
-            accountTypeText = "Unapproved Account";
+            accountTypeText = "Student Account";
             break;
         case 1:
-            accountTypeText = "Student Account";
+            accountTypeText = "Teacher Account";
             break;
         case 2:
             accountTypeText = "Admin Account";
             break;
     }
-    document.getElementById("Account").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
+    document.getElementById("Account-Type").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
 }
-
-
-async function accountInfo() {
-    try {
-      const response = await fetch("https://develmets.skiscratcher.com/loginInfo", {
-        method: "GET",
-        credentials: "include"
-      });
-      if (!response.ok) {
-        console.error("Failed to fetch account info.");
-        return;
-      }
-      const accountInfo = await response.json();
-      return accountInfo;
-    } catch (err) {
-      console.error("Error fetching account info:", err);
-    }
-  }
 
 async function loadMaterials() {
     try {
@@ -545,8 +548,7 @@ async function loadTools() {
     } catch (error) {
       console.error("Error loading tools:", error);
     }
-    await accountInfo();
-    loadProfileInfo();
+    await loadProfileInfo();
   }
 window.addEventListener("DOMContentLoaded", loadMaterials);
   async function addMaterial() {

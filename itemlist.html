@@ -81,6 +81,33 @@
   </div>
 
 <script>
+
+async function loadProfileInfo() {
+    const accountInfo = await accountInfo();
+    if (!accountInfo) {
+        document.getElementById("Name").innerHTML = "<i>Name:</i> N/A";
+        document.getElementById("Email").innerHTML = "<i>Email:</i> N/A";
+        document.getElementById("Account").innerHTML = "<i>Account Type:</i> N/A";
+        return;
+    }
+    document.getElementById("Name").innerHTML = `<i>Name:</i> ${accountInfo.username}`;
+    document.getElementById("Email").innerHTML = `<i>Email:</i> ${accountInfo.email}`;
+    let accountTypeText = "Unknown Account Type";
+    switch (accountInfo.userType) {
+        case 0:
+            accountTypeText = "Unapproved Account";
+            break;
+        case 1:
+            accountTypeText = "Student Account";
+            break;
+        case 2:
+            accountTypeText = "Admin Account";
+            break;
+    }
+    document.getElementById("Account").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
+}
+
+
 async function accountInfo() {
     try {
       const response = await fetch("https://develmets.skiscratcher.com/loginInfo", {
@@ -622,30 +649,7 @@ window.addEventListener("DOMContentLoaded", loadMaterials);
   }
 }
 
-async function loadProfileInfo() {
-    const accountInfo = await accountInfo();
-    if (!accountInfo) {
-        document.getElementById("Name").innerHTML = "<i>Name:</i> N/A";
-        document.getElementById("Email").innerHTML = "<i>Email:</i> N/A";
-        document.getElementById("Account").innerHTML = "<i>Account Type:</i> N/A";
-        return;
-    }
-    document.getElementById("Name").innerHTML = `<i>Name:</i> ${accountInfo.username}`;
-    document.getElementById("Email").innerHTML = `<i>Email:</i> ${accountInfo.email}`;
-    let accountTypeText = "Unknown Account Type";
-    switch (accountInfo.userType) {
-        case 0:
-            accountTypeText = "Unapproved Account";
-            break;
-        case 1:
-            accountTypeText = "Student Account";
-            break;
-        case 2:
-            accountTypeText = "Admin Account";
-            break;
-    }
-    document.getElementById("Account").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
-}
+
 
 
   function openItemForm() {

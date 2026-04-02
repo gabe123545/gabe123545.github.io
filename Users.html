@@ -55,7 +55,7 @@
           const users = await response.json();
 
           // Filter users with userType == 0
-          const unapprovedUsers = users.filter(user => user.userType == 0);
+          const unapprovedUsers = users.filter(user => user.userType == 0 && user.classId == null );
 
           if (unapprovedUsers.length === 0) {
             userListDiv.innerHTML = "<b>No unapproved users.</b>";

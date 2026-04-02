@@ -33,7 +33,7 @@
         <div class="profileDetails">
             <h2 id="Name"><i>Name:</i> </h2>
             <h2 id="Email"><i>Email:</i></h2>
-            <h2 id="Account Type"><i>Account Type:</i> Student Account</h2>
+            <h2 id="Account-Type"><i>Account Type:</i> Student Account</h2>
         </div>
         <div class="profilePicture">
             <img src="Images/metalIcon.jpg" width="150" alt="placeholder">
@@ -69,7 +69,7 @@ async function loadProfileInfo() {
     if (!accountInfo) {
         document.getElementById("Name").innerHTML = "<i>Name:</i> N/A";
         document.getElementById("Email").innerHTML = "<i>Email:</i> N/A";
-        document.getElementById("Account Type").innerHTML = "<i>Account Type:</i> N/A";
+        document.getElementById("Account-Type").innerHTML = "<i>Account Type:</i> N/A";
         return;
     }
     document.getElementById("Name").innerHTML = `<i>Name:</i> ${accountInfo.username}`;
@@ -86,7 +86,7 @@ async function loadProfileInfo() {
             accountTypeText = "Admin Account";
             break;
     }
-    document.getElementById("Account Type").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
+    document.getElementById("Account-Type").innerHTML = `<i>Account Type:</i> ${accountTypeText}`;
 }
         // Fetch the current user's history from the backend and render it into
         // #historyContainer. This runs on page load.
@@ -134,6 +134,7 @@ async function loadProfileInfo() {
                 console.error('Failed to load history', err);
                 container.innerHTML = "<h3><i>Error loading history</i></h3>";
             }
+            accountInfo();
             loadProfileInfo();
         }
 

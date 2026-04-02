@@ -209,6 +209,8 @@ async function addClass() {
     await fetchTools();
     renderClassrooms();
     renderUserList();
+    accountInfo();
+    loadProfileInfo();
   } catch (err) {
     alert("Error fetching classes: " + err);
   }
@@ -232,7 +234,7 @@ async function addClass() {
       console.error("Logout request failed:", error);
     }
     
-    loadProfileInfo();
+    
   }
 
   function openForm() {

@@ -134,6 +134,7 @@ async function loadProfileInfo() {
                 console.error('Failed to load history', err);
                 container.innerHTML = "<h3><i>Error loading history</i></h3>";
             }
+            loadProfileInfo();
         }
 
         // Also ensure history is loaded on DOMContentLoaded in case onload was not fired

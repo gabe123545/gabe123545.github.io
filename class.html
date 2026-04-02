@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body onload="fetchAndRenderClasses()">
     <nav>
     <!--KTI Logo and Title-->
     <p class="navMainText">
@@ -118,7 +118,7 @@
         }
       }
 
-      async function loadProfileInfo() {
+async function loadProfileInfo() {
     const accountInfo = await accountInfo();
     if (!accountInfo) {
         document.getElementById("Name").innerHTML = "<i>Name:</i> N/A";
@@ -232,7 +232,7 @@ async function addClass() {
       console.error("Logout request failed:", error);
     }
     
-
+    loadProfileInfo();
   }
 
   function openForm() {

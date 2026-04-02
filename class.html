@@ -209,7 +209,7 @@ async function addClass() {
     await fetchTools();
     renderClassrooms();
     renderUserList();
-    accountInfo();
+    await accountInfo();
     loadProfileInfo();
   } catch (err) {
     alert("Error fetching classes: " + err);

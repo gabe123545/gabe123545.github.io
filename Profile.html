@@ -134,7 +134,7 @@ async function loadProfileInfo() {
                 console.error('Failed to load history', err);
                 container.innerHTML = "<h3><i>Error loading history</i></h3>";
             }
-            accountInfo();
+            await accountInfo();
             loadProfileInfo();
         }
 

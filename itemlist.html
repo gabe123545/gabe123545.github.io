@@ -518,7 +518,7 @@ async function loadTools() {
     } catch (error) {
       console.error("Error loading tools:", error);
     }
-    accountInfo();
+    await accountInfo();
     loadProfileInfo();
   }
 window.addEventListener("DOMContentLoaded", loadMaterials);

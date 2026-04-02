@@ -72,7 +72,7 @@
             userListDiv.innerHTML = "<b>Failed to fetch users.</b>";
             return;
           }
-          const accountInfo = await accountInfo();
+          const accountInfo = await getAccountInfo();
           if (!accountInfo || accountInfo.userType != 2) {
             userListDiv.innerHTML = "<b>You do not have permission to view this page.</b>";
             return;

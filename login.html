@@ -55,7 +55,7 @@
           Show Password</label>
         </div>
 
-        <button type="button" class="login-button" onclick="registerUser()">Register</button>
+        <button type="button" class="Register-button" onclick="registerUser()">Register</button>
 
         <div class="bottom-links">
           <a href="#">Forgot password?</a><br>
@@ -159,12 +159,12 @@
     }
 
     function openRegister() {
-      document.querySelector(".login-box").style.display = "none";
-      document.querySelector(".Register-box").style.display = "block";
+      document.getElementsByClassName("login-box")[0].style.display = "none";
+      document.getElementsByClassName("Register-box")[0].style.display = "block";
     }
     function openLogin() {
-      document.querySelector(".login-box").style.display = "block";
-      document.querySelector(".Register-box").style.display = "none";
+      document.getElementsByClassName("login-box")[0].style.display = "block";
+      document.getElementsByClassName("Register-box")[0].style.display = "none";
     }
   </script>
 </body>

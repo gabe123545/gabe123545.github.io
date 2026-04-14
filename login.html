@@ -37,6 +37,33 @@
         </div>
       </form>
     </div>
+    <div class="Register-box">
+      <h2>Register</h2>
+      <form id="registerForm" method="post">
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" name="regEmail" required placeholder="Enter your email" />
+
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" name="regPassword" required placeholder="Enter your password" />
+
+        <label for="shopName">Shop Name</label>
+        <input type="text" id="shopName" name="shopName" required placeholder="Enter your shop name" />
+
+        <div class="show-password">
+          <label>
+            <input type="checkbox" onclick="document.getElementById('regPassword').type = this.checked ? 'text' : 'password'" />
+          Show Password</label>
+        </div>
+
+        <button type="button" class="login-button" onclick="registerUser()">Register</button>
+
+        <div class="bottom-links">
+          <a href="#">Forgot password?</a><br>
+          <span>have an account? <a onclick="openLogin()">Sign in</a></span>
+        </div>
+      </form>
+    </div>
+
   </div>
 
   <script>
@@ -92,6 +119,52 @@
         console.error("Login error:", error);
         alert("Login request failed.");
       }
+    }
+    async function registerUser() {
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      const shopName = document.getElementById("shopName").value;
+
+      const url = "https://develmets.skiscratcher.com/registerAdminAccount";
+      const fd = new URLSearchParams({ email, password, shopName });
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: fd,
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          const html = await response.text();
+          console.error("Expected JSON but got:", html);
+          alert("Registration failed or server returned unexpected data.");
+          return;
+        }
+
+        const json = await response.json();
+        if (json.register === true) {
+          window.location.href = "itemlist.html";
+        } else {
+          alert("Registration failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        alert("Registration request failed.");
+      }
+    }
+
+    function openRegister() {
+      document.querySelector(".login-box").style.display = "none";
+      document.querySelector(".Register-box").style.display = "block";
+    }
+    function openLogin() {
+      document.querySelector(".login-box").style.display = "block";
+      document.querySelector(".Register-box").style.display = "none";
     }
   </script>
 </body>

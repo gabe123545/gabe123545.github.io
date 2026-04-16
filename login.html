@@ -67,9 +67,12 @@
   </div>
 
   <script>
+    const url = "https://develmets.skiscratcher.com";
+
+
     window.onload = async function () {
       try {
-        const response = await fetch("https://develmets.skiscratcher.com/logininfo", {
+        const response = await fetch(url +"/logininfo", {
           method: "GET",
           credentials: "include"
         });
@@ -88,11 +91,11 @@
     async function loginUser() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("myInput").value;
-      const url = "https://develmets.skiscratcher.com/login";
+
       const fd = new URLSearchParams({ email, password });
 
       try {
-        const response = await fetch(url, {
+        const response = await fetch(url + "/login", {
           method: "POST",
           body: fd,
           credentials: "include",
@@ -125,11 +128,11 @@
       const password = document.getElementById("regPassword").value;
       const shopName = document.getElementById("shopName").value;
 
-      const url = "https://develmets.skiscratcher.com/registerAdminAccount";
+
       const fd = new URLSearchParams({ email, password, shopName });
 
       try {
-        const response = await fetch(url, {
+        const response = await fetch(url + "/registerAdminAccount", {
           method: "POST",
           body: fd,
           credentials: "include",

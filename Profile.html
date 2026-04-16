@@ -46,9 +46,11 @@
         </div>
     </div>
     <script>
+         const url = "https://develmets.skiscratcher.com";
+
    async function getAccountInfo() {
     try {
-        const response = await fetch("https://develmets.skiscratcher.com/loginInfo", {
+        const response = await fetch(url + "/loginInfo", {
             method: "GET",
             credentials: "include"
         });
@@ -99,7 +101,7 @@
             const container = document.getElementById("historyContainer");
             container.innerHTML = "<p><i>Loading history...</i></p>";
             try {
-                const response = await fetch("https://develmets.skiscratcher.com/getMyHistory", {
+                const response = await fetch(url + "/getMyHistory", {
                     method: "GET",
                     credentials: "include"
                 });

@@ -136,8 +136,7 @@
 
       try {
         const response = await fetch(url + "/registerAdminAccount", {
-          console.log("Status:", response.status);
-          console.log("URL hit:", url + "/registerAdminAccount");
+         
           method: "POST",
           body: fd,
           credentials: "include",
@@ -145,6 +144,8 @@
             "Content-Type": "application/x-www-form-urlencoded"
           }
         });
+         console.log("Status:", response.status);
+        console.log("URL hit:", url + "/registerAdminAccount");
 
         const contentType = response.headers.get("content-type") || "";
         if (!contentType.includes("application/json")) {

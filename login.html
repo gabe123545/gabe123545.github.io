@@ -40,6 +40,9 @@
     <div class="Register-box">
       <h2>Register</h2>
       <form id="registerForm" method="post">
+        <label for="regName">Name</label>
+        <input type="text" id="regName" name="regName" required placeholder="Enter your name" />
+
         <label for="regEmail">Email</label>
         <input type="email" id="regEmail" name="regEmail" required placeholder="Enter your email" />
 
@@ -127,9 +130,9 @@
       const email = document.getElementById("regEmail").value;
       const password = document.getElementById("regPassword").value;
       const shopName = document.getElementById("shopName").value;
+      const name = document.getElementById("regName").value;
 
-
-      const fd = new URLSearchParams({ email, password, shopName });
+      const fd = new URLSearchParams({ email, password, shopName, name });
 
       try {
         const response = await fetch(url + "/registerAdminAccount", {
